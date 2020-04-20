@@ -16,4 +16,18 @@
             });
         });
     }
+    var collapseButtonEle = document.getElementById("cityssm-theme--sidemenu-collapse-button");
+    var collapseSidemenuEle = document.getElementById("cityssm-theme--sidemenu-collapsed");
+    var expandButtonEle = document.getElementById("cityssm-theme--sidemenu-expand-button");
+    var expandSidemenuEle = document.getElementById("cityssm-theme--sidemenu-expanded");
+    if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
+        collapseButtonEle.addEventListener("click", function () {
+            expandSidemenuEle.classList.add("is-hidden");
+            collapseSidemenuEle.classList.remove("is-hidden");
+        });
+        expandButtonEle.addEventListener("click", function () {
+            collapseSidemenuEle.classList.add("is-hidden");
+            expandSidemenuEle.classList.remove("is-hidden");
+        });
+    }
 }());

@@ -1,124 +1,18 @@
 (function () {
-    const cityssm = {};
-    cityssm.clearElement = function (ele) {
-        while (ele.firstChild) {
-            ele.removeChild(ele.firstChild);
-        }
-    };
-    cityssm.escapeHTML = function (str) {
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;");
-    };
-    cityssm.dateToString = function (dateObj) {
-        return dateObj.getFullYear() + "-" +
-            ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
-            ("0" + (dateObj.getDate())).slice(-2);
-    };
-    cityssm.responseToJSON = function (response) {
-        return response.json();
-    };
-    cityssm.postJSON = function (fetchUrl, formEleOrObj, responseFn) {
-        const fetchOptions = {
-            method: "POST",
-            credentials: "include"
-        };
-        if (formEleOrObj) {
-            if (formEleOrObj.tagName && formEleOrObj.tagName === "FORM") {
-                if (formEleOrObj.querySelector("input[name][type='file']")) {
-                    fetchOptions.body = new FormData(formEleOrObj);
-                }
-                else {
-                    fetchOptions.body = new URLSearchParams(new FormData(formEleOrObj));
-                }
-            }
-            else if (formEleOrObj.constructor === Object) {
-                fetchOptions.headers = {
-                    "Content-Type": "application/json"
-                };
-                fetchOptions.body = JSON.stringify(formEleOrObj);
-            }
-        }
-        window.fetch(fetchUrl, fetchOptions)
-            .then(cityssm.responseToJSON)
-            .then(responseFn);
-    };
-    cityssm.showModal = function (modalEle) {
-        modalEle.classList.add("is-active");
-    };
-    cityssm.hideModal = function (internalEle_or_internalEvent) {
-        const internalEle = internalEle_or_internalEvent.currentTarget || internalEle_or_internalEvent;
-        const modalEle = (internalEle.classList.contains("modal") ? internalEle : internalEle.closest(".modal"));
-        modalEle.classList.remove("is-active");
-    };
-    cityssm.openHtmlModal = function (htmlFileName, callbackFns) {
-        window.fetch("/html/" + htmlFileName + ".html")
-            .then(function (response) {
-            return response.text();
-        })
-            .then(function (modalHTML) {
-            const modalContainerEle = document.createElement("div");
-            modalContainerEle.innerHTML = modalHTML;
-            const modalEle = modalContainerEle.getElementsByClassName("modal")[0];
-            document.body.insertAdjacentElement("beforeend", modalContainerEle);
-            if (callbackFns && callbackFns.onshow) {
-                callbackFns.onshow(modalEle);
-            }
-            modalEle.classList.add("is-active");
-            const closeModalFn = function () {
-                const modalWasShown = modalEle.classList.contains("is-active");
-                if (callbackFns && callbackFns.onhide && modalWasShown) {
-                    const doHide = callbackFns.onhide(modalEle);
-                    if (doHide) {
-                        return;
-                    }
-                }
-                modalEle.classList.remove("is-active");
-                if (callbackFns && callbackFns.onhidden && modalWasShown) {
-                    callbackFns.onhidden(modalEle);
-                }
-                modalContainerEle.remove();
-                if (callbackFns && callbackFns.onremoved) {
-                    callbackFns.onremoved();
-                }
-            };
-            if (callbackFns && callbackFns.onshown) {
-                callbackFns.onshown(modalEle, closeModalFn);
-            }
-            const closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
-            for (let btnIndex = 0; btnIndex < closeModalBtnEles.length; btnIndex += 1) {
-                closeModalBtnEles[btnIndex].addEventListener("click", closeModalFn);
-            }
-        });
-    };
-    let isNavBlockerEnabled = false;
+    var isNavBlockerEnabled = false;
     function navBlockerEventFn(e) {
-        const confirmationMessage = "You have unsaved changes that may be lost.";
+        var confirmationMessage = "You have unsaved changes that may be lost.";
         e.returnValue = confirmationMessage;
         return confirmationMessage;
     }
-    cityssm.enableNavBlocker = function () {
-        if (!isNavBlockerEnabled) {
-            window.addEventListener("beforeunload", navBlockerEventFn);
-            isNavBlockerEnabled = true;
-        }
-    };
-    cityssm.disableNavBlocker = function () {
-        if (isNavBlockerEnabled) {
-            window.removeEventListener("beforeunload", navBlockerEventFn);
-            isNavBlockerEnabled = false;
-        }
-    };
     function confirmModalFn(modalOptions) {
-        const modalEle = document.createElement("div");
+        var modalEle = document.createElement("div");
         modalEle.className = "modal is-active";
-        const contextualColorName = modalOptions.contextualColorName || "info";
-        const titleString = modalOptions.titleString || "";
-        const bodyHTML = modalOptions.bodyHTML || "";
-        const cancelButtonHTML = modalOptions.cancelButtomHTML || "Cancel";
-        const okButtonHTML = modalOptions.okButtonHTML || "OK";
+        var contextualColorName = modalOptions.contextualColorName || "info";
+        var titleString = modalOptions.titleString || "";
+        var bodyHTML = modalOptions.bodyHTML || "";
+        var cancelButtonHTML = modalOptions.cancelButtonHTML || "Cancel";
+        var okButtonHTML = modalOptions.okButtonHTML || "OK";
         modalEle.innerHTML = "<div class=\"modal-background\"></div>" +
             "<div class=\"modal-content\">" +
             "<div class=\"message is-" + contextualColorName + "\">" +
@@ -146,7 +40,7 @@
                 modalEle.remove();
             });
         }
-        const okButtonEle = modalEle.getElementsByClassName("is-ok-button")[0];
+        var okButtonEle = modalEle.getElementsByClassName("is-ok-button")[0];
         okButtonEle.addEventListener("click", function () {
             modalEle.remove();
             if (modalOptions.callbackFn) {
@@ -156,23 +50,134 @@
         document.body.insertAdjacentElement("beforeend", modalEle);
         okButtonEle.focus();
     }
-    cityssm.confirmModal = function (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) {
-        confirmModalFn({
-            contextualColorName: contextualColorName,
-            titleString: titleString,
-            bodyHTML: bodyHTML,
-            okButtonHTML: okButtonHTML,
-            callbackFn: callbackFn
-        });
-    };
-    cityssm.alertModal = function (titleString, bodyHTML, okButtonHTML, contextualColorName) {
-        confirmModalFn({
-            contextualColorName: contextualColorName,
-            titleString: titleString,
-            bodyHTML: bodyHTML,
-            hideCancelButton: true,
-            okButtonHTML: okButtonHTML
-        });
+    var cityssm = {
+        clearElement: function (ele) {
+            while (ele.firstChild) {
+                ele.removeChild(ele.firstChild);
+            }
+        },
+        escapeHTML: function (str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        },
+        dateToString: function (dateObj) {
+            return dateObj.getFullYear() + "-" +
+                ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + (dateObj.getDate())).slice(-2);
+        },
+        responseToJSON: function (response) {
+            return response.json();
+        },
+        postJSON: function (fetchUrl, formEleOrObj, responseFn) {
+            var fetchOptions = {
+                method: "POST",
+                credentials: "include"
+            };
+            if (formEleOrObj) {
+                if (formEleOrObj instanceof HTMLFormElement) {
+                    var formEle = formEleOrObj;
+                    if (formEle.querySelector("input[name][type='file']")) {
+                        fetchOptions.body = new FormData(formEle);
+                    }
+                    else {
+                        fetchOptions.body = new URLSearchParams(new FormData(formEle));
+                    }
+                }
+                else if (formEleOrObj instanceof Object) {
+                    fetchOptions.headers = {
+                        "Content-Type": "application/json"
+                    };
+                    fetchOptions.body = JSON.stringify(formEleOrObj);
+                }
+            }
+            window.fetch(fetchUrl, fetchOptions)
+                .then(cityssm.responseToJSON)
+                .then(responseFn);
+        },
+        showModal: function (modalEle) {
+            modalEle.classList.add("is-active");
+        },
+        hideModal: function (internalEle_or_internalEvent) {
+            var internalEle = internalEle_or_internalEvent;
+            if (internalEle instanceof Event) {
+                internalEle = internalEle_or_internalEvent.currentTarget;
+            }
+            var modalEle = (internalEle.classList.contains("modal") ? internalEle : internalEle.closest(".modal"));
+            modalEle.classList.remove("is-active");
+        },
+        openHtmlModal: function (htmlFileName, callbackFns) {
+            window.fetch("/html/" + htmlFileName + ".html")
+                .then(function (response) {
+                return response.text();
+            })
+                .then(function (modalHTML) {
+                var modalContainerEle = document.createElement("div");
+                modalContainerEle.innerHTML = modalHTML;
+                var modalEle = modalContainerEle.getElementsByClassName("modal")[0];
+                document.body.insertAdjacentElement("beforeend", modalContainerEle);
+                if (callbackFns && callbackFns.onshow) {
+                    callbackFns.onshow(modalEle);
+                }
+                modalEle.classList.add("is-active");
+                var closeModalFn = function () {
+                    var modalWasShown = modalEle.classList.contains("is-active");
+                    if (callbackFns && callbackFns.onhide && modalWasShown) {
+                        var doHide = callbackFns.onhide(modalEle);
+                        if (doHide) {
+                            return;
+                        }
+                    }
+                    modalEle.classList.remove("is-active");
+                    if (callbackFns && callbackFns.onhidden && modalWasShown) {
+                        callbackFns.onhidden(modalEle);
+                    }
+                    modalContainerEle.remove();
+                    if (callbackFns && callbackFns.onremoved) {
+                        callbackFns.onremoved();
+                    }
+                };
+                if (callbackFns && callbackFns.onshown) {
+                    callbackFns.onshown(modalEle, closeModalFn);
+                }
+                var closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
+                for (var btnIndex = 0; btnIndex < closeModalBtnEles.length; btnIndex += 1) {
+                    closeModalBtnEles[btnIndex].addEventListener("click", closeModalFn);
+                }
+            });
+        },
+        enableNavBlocker: function () {
+            if (!isNavBlockerEnabled) {
+                window.addEventListener("beforeunload", navBlockerEventFn);
+                isNavBlockerEnabled = true;
+            }
+        },
+        disableNavBlocker: function () {
+            if (isNavBlockerEnabled) {
+                window.removeEventListener("beforeunload", navBlockerEventFn);
+                isNavBlockerEnabled = false;
+            }
+        },
+        confirmModal: function (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) {
+            confirmModalFn({
+                contextualColorName: contextualColorName,
+                titleString: titleString,
+                bodyHTML: bodyHTML,
+                okButtonHTML: okButtonHTML,
+                callbackFn: callbackFn
+            });
+        },
+        alertModal: function (titleString, bodyHTML, okButtonHTML, contextualColorName) {
+            confirmModalFn({
+                contextualColorName: contextualColorName,
+                titleString: titleString,
+                bodyHTML: bodyHTML,
+                hideCancelButton: true,
+                okButtonHTML: okButtonHTML
+            });
+        }
     };
     window.cityssm = window.cityssm || cityssm;
 }());

@@ -6,6 +6,8 @@
             navbarEle.getElementsByClassName("navbar-menu")[0].classList.toggle("is-active");
         });
     }
+}());
+(function () {
     var logoutButtonEle = document.getElementById("cityssm-theme--logout-button");
     if (logoutButtonEle) {
         logoutButtonEle.addEventListener("click", function (clickEvent) {
@@ -16,18 +18,52 @@
             });
         });
     }
+}());
+(function () {
+    var localStoragePropertyName = "collapseSidemenu";
     var collapseButtonEle = document.getElementById("cityssm-theme--sidemenu-collapse-button");
     var collapseSidemenuEle = document.getElementById("cityssm-theme--sidemenu-collapsed");
     var expandButtonEle = document.getElementById("cityssm-theme--sidemenu-expand-button");
     var expandSidemenuEle = document.getElementById("cityssm-theme--sidemenu-expanded");
+    var collapseFn = function () {
+        expandSidemenuEle.classList.add("is-hidden");
+        collapseSidemenuEle.classList.remove("is-hidden");
+        try {
+            window.localStorage.setItem(localStoragePropertyName, "true");
+        }
+        catch (e) {
+        }
+    };
+    var expandFn = function () {
+        collapseSidemenuEle.classList.add("is-hidden");
+        expandSidemenuEle.classList.remove("is-hidden");
+        try {
+            window.localStorage.removeItem(localStoragePropertyName);
+        }
+        catch (e) {
+        }
+    };
     if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
-        collapseButtonEle.addEventListener("click", function () {
-            expandSidemenuEle.classList.add("is-hidden");
-            collapseSidemenuEle.classList.remove("is-hidden");
-        });
-        expandButtonEle.addEventListener("click", function () {
-            collapseSidemenuEle.classList.add("is-hidden");
-            expandSidemenuEle.classList.remove("is-hidden");
-        });
+        collapseButtonEle.addEventListener("click", collapseFn);
+        expandButtonEle.addEventListener("click", expandFn);
+        try {
+            if (window.localStorage.getItem(localStoragePropertyName)) {
+                collapseFn();
+            }
+        }
+        catch (e) {
+        }
+    }
+}());
+(function () {
+    var keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
+    if (keepAliveMillis && keepAliveMillis !== "0") {
+        var keepAliveFn = function () {
+            cityssm.postJSON("/keepAlive", {
+                t: Date.now()
+            }, function () {
+            });
+        };
+        window.setInterval(keepAliveFn, parseInt(keepAliveMillis));
     }
 }());

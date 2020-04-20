@@ -4,18 +4,19 @@ declare const cityssm: {
     bodyHTML: string,
     okButtonHTML: string,
     contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger",
-    callbackFn: () => void) => void
+    callbackFn: () => void) => void,
+
+  postJSON: (fetchUrl: string, formObj: object, responseFn: () => void) => void
 
 };
 
 
+/*
+* NAVBAR TOGGLE
+*/
+
+
 (function() {
-
-
-  /*
-   * NAVBAR TOGGLE
-   */
-
 
   const navbarEle = document.getElementById("cityssm-theme--navbar");
 
@@ -28,11 +29,15 @@ declare const cityssm: {
     });
   }
 
+}());
 
-  /*
-   * LOGOUT MODAL
-   */
 
+/*
+ * LOGOUT MODAL
+ */
+
+
+(function() {
 
   const logoutButtonEle = document.getElementById("cityssm-theme--logout-button");
 
@@ -58,11 +63,17 @@ declare const cityssm: {
     });
   }
 
+}());
 
-  /*
-   * SIDE MENU INIT
-   */
 
+/*
+ * SIDE MENU INIT
+ */
+
+
+(function() {
+
+  const localStoragePropertyName = "collapseSidemenu";
 
   const collapseButtonEle = document.getElementById("cityssm-theme--sidemenu-collapse-button");
   const collapseSidemenuEle = document.getElementById("cityssm-theme--sidemenu-collapsed");
@@ -70,21 +81,78 @@ declare const cityssm: {
   const expandButtonEle = document.getElementById("cityssm-theme--sidemenu-expand-button");
   const expandSidemenuEle = document.getElementById("cityssm-theme--sidemenu-expanded");
 
+  const collapseFn = function() {
+
+    expandSidemenuEle.classList.add("is-hidden");
+    collapseSidemenuEle.classList.remove("is-hidden");
+
+    try {
+
+      window.localStorage.setItem(localStoragePropertyName, "true");
+
+    } catch (e) {
+      // ignore
+    }
+
+  };
+
+  const expandFn = function() {
+
+    collapseSidemenuEle.classList.add("is-hidden");
+    expandSidemenuEle.classList.remove("is-hidden");
+
+    try {
+
+      window.localStorage.removeItem(localStoragePropertyName);
+
+    } catch (e) {
+      // Ignore
+    }
+
+  };
+
   if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
 
-    collapseButtonEle.addEventListener("click", function() {
+    collapseButtonEle.addEventListener("click", collapseFn);
+    expandButtonEle.addEventListener("click", expandFn);
 
-      expandSidemenuEle.classList.add("is-hidden");
-      collapseSidemenuEle.classList.remove("is-hidden");
+    try {
 
-    });
+      if (window.localStorage.getItem(localStoragePropertyName)) {
+        collapseFn();
+      }
 
-    expandButtonEle.addEventListener("click", function() {
+    } catch (e) {
+      // Ignore
+    }
+  }
+}());
 
-      collapseSidemenuEle.classList.add("is-hidden");
-      expandSidemenuEle.classList.remove("is-hidden");
 
-    });
+/*
+ * KEEP ALIVE
+ */
+
+
+(function() {
+
+  const keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
+
+  if (keepAliveMillis && keepAliveMillis !== "0") {
+
+    const keepAliveFn = function() {
+
+      cityssm.postJSON("/keepAlive", {
+        t: Date.now()
+      }, function() {
+
+        // No action
+
+      });
+
+    };
+
+    window.setInterval(keepAliveFn, parseInt(keepAliveMillis));
 
   }
 

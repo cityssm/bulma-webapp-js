@@ -140,6 +140,14 @@ type confirmModalFn_modalOptions = {
 
     },
 
+    dateStringDifferenceInDays: function(fromDateString: string, toDateString: string) {
+
+      const fromDate = cityssm.dateStringToDate(fromDateString);
+      const toDate = cityssm.dateStringToDate(toDateString);
+
+      return Math.round((toDate.getTime() - fromDate.getTime()) / (86400 * 1000.0));
+    },
+
 
     // FETCH HELPERS
 

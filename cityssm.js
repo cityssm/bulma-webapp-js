@@ -72,6 +72,11 @@
             var datePieces = dateString.split("-");
             return new Date(parseInt(datePieces[0]), parseInt(datePieces[1]) - 1, parseInt(datePieces[2]), 0, 0, 0, 0);
         },
+        dateStringDifferenceInDays: function (fromDateString, toDateString) {
+            var fromDate = cityssm.dateStringToDate(fromDateString);
+            var toDate = cityssm.dateStringToDate(toDateString);
+            return Math.round((toDate.getTime() - fromDate.getTime()) / (86400 * 1000.0));
+        },
         responseToJSON: function (response) {
             return response.json();
         },

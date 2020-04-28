@@ -68,6 +68,10 @@
                 ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
                 ("0" + (dateObj.getDate())).slice(-2);
         },
+        dateStringToDate: function (dateString) {
+            var datePieces = dateString.split("-");
+            return new Date(parseInt(datePieces[0]), parseInt(datePieces[1]) - 1, parseInt(datePieces[2]), 0, 0, 0, 0);
+        },
         responseToJSON: function (response) {
             return response.json();
         },

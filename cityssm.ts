@@ -133,6 +133,13 @@ type confirmModalFn_modalOptions = {
 
     },
 
+    dateStringToDate: function(dateString: string) {
+
+      const datePieces = dateString.split("-");
+      return new Date(parseInt(datePieces[0]), parseInt(datePieces[1]) - 1, parseInt(datePieces[2]), 0, 0, 0, 0);
+
+    },
+
 
     // FETCH HELPERS
 

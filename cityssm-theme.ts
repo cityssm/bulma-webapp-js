@@ -1,14 +1,6 @@
-declare const cityssm: {
+import { cityssmGlobal } from "./types";
 
-  confirmModal: (titleString: string,
-    bodyHTML: string,
-    okButtonHTML: string,
-    contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger",
-    callbackFn: () => void) => void,
-
-  postJSON: (fetchUrl: string, formObj: object, responseFn: () => void) => void
-
-};
+declare const cityssm: cityssmGlobal;
 
 
 /*

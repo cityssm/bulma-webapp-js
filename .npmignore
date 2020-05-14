@@ -1,0 +1,5 @@
+.atomignore
+.eslintrc.yml
+.npmignore
+*.ts
+!*.t.ts

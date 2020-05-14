@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
     var isNavBlockerEnabled = false;
     function navBlockerEventFn(e) {

@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
     var navbarEle = document.getElementById("cityssm-theme--navbar");
     if (navbarEle) {

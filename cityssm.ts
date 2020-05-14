@@ -1,3 +1,5 @@
+import { cityssmGlobal } from "./types";
+
 type confirmModalFn_modalOptions = {
 
   contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger",
@@ -103,7 +105,7 @@ type confirmModalFn_modalOptions = {
   }
 
 
-  const cityssm = {
+  const cityssm: cityssmGlobal = {
 
 
     // HELPERS

@@ -1,7 +1,7 @@
 export declare type cityssmGlobal = {
     clearElement: (element: HTMLElement) => void;
     escapeHTML: (unescapedString: string) => string;
-    postJSON: (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: () => void) => void;
+    postJSON: (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: any) => void) => void;
     responseToJSON: (response: Response) => Promise<any>;
     showModal: (modalEle: HTMLElement) => void;
     hideModal: (internalElementOrEvent: HTMLElement | Event) => void;

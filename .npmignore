@@ -2,4 +2,4 @@
 .eslintrc.yml
 .npmignore
 *.ts
-!*.t.ts
+!*.d.ts

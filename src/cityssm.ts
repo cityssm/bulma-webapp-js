@@ -56,7 +56,7 @@ type confirmModalFn_modalOptions = {
         "</header>") +
 
       ("<section class=\"message-body\">" +
-        (bodyHTML === "" ? "" : "<div class=\"has-margin-bottom-20\">" + bodyHTML + "</div>") +
+        (bodyHTML === "" ? "" : "<div class=\"mb-4\">" + bodyHTML + "</div>") +
 
         ("<div class=\"buttons justify-flex-end\">" +
           (modalOptions.hideCancelButton ?

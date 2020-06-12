@@ -1,5 +1,4 @@
 .atomignore
 .eslintrc.yml
 .npmignore
-*.ts
-!*.d.ts
+tsconfig.json

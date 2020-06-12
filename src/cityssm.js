@@ -72,7 +72,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         },
         dateStringToDate: function (dateString) {
             var datePieces = dateString.split("-");
-            return new Date(parseInt(datePieces[0]), parseInt(datePieces[1]) - 1, parseInt(datePieces[2]), 0, 0, 0, 0);
+            return new Date(parseInt(datePieces[0], 10), parseInt(datePieces[1], 10) - 1, parseInt(datePieces[2], 10), 0, 0, 0, 0);
         },
         dateStringDifferenceInDays: function (fromDateString, toDateString) {
             var fromDate = cityssm.dateStringToDate(fromDateString);

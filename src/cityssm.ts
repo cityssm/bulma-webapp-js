@@ -138,7 +138,7 @@ type confirmModalFn_modalOptions = {
     dateStringToDate: function(dateString: string) {
 
       const datePieces = dateString.split("-");
-      return new Date(parseInt(datePieces[0]), parseInt(datePieces[1]) - 1, parseInt(datePieces[2]), 0, 0, 0, 0);
+      return new Date(parseInt(datePieces[0], 10), parseInt(datePieces[1], 10) - 1, parseInt(datePieces[2], 10), 0, 0, 0, 0);
 
     },
 
@@ -158,7 +158,7 @@ type confirmModalFn_modalOptions = {
       return response.json();
     },
 
-    postJSON: function(fetchUrl: string, formEleOrObj: HTMLFormElement | object, responseFn: () => void) {
+    postJSON: function(fetchUrl: string, formEleOrObj: HTMLFormElement | object, responseFn: (responseJSON: {}) => void) {
 
       const fetchOptions: RequestInit = {
         method: "POST",

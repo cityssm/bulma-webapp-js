@@ -66,6 +66,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }, function () {
             });
         };
-        window.setInterval(keepAliveFn, parseInt(keepAliveMillis));
+        window.setInterval(keepAliveFn, parseInt(keepAliveMillis, 10));
     }
 }());

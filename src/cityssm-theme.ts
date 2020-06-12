@@ -144,7 +144,7 @@ declare const cityssm: cityssmGlobal;
 
     };
 
-    window.setInterval(keepAliveFn, parseInt(keepAliveMillis));
+    window.setInterval(keepAliveFn, parseInt(keepAliveMillis, 10));
 
   }
 

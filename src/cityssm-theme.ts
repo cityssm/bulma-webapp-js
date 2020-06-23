@@ -1,4 +1,4 @@
-import { cityssmGlobal } from "./types";
+import type { cityssmGlobal } from "./types";
 
 declare const cityssm: cityssmGlobal;
 
@@ -17,7 +17,6 @@ declare const cityssm: cityssmGlobal;
 
       (<Element>clickEvent.currentTarget).classList.toggle("is-active");
       navbarEle.getElementsByClassName("navbar-menu")[0].classList.toggle("is-active");
-
     });
   }
 
@@ -79,10 +78,9 @@ declare const cityssm: cityssmGlobal;
     collapseSidemenuEle.classList.remove("is-hidden");
 
     try {
-
       window.localStorage.setItem(localStoragePropertyName, "true");
 
-    } catch (e) {
+    } catch (_e) {
       // ignore
     }
 
@@ -94,10 +92,9 @@ declare const cityssm: cityssmGlobal;
     expandSidemenuEle.classList.remove("is-hidden");
 
     try {
-
       window.localStorage.removeItem(localStoragePropertyName);
 
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
 
@@ -109,12 +106,11 @@ declare const cityssm: cityssmGlobal;
     expandButtonEle.addEventListener("click", expandFn);
 
     try {
-
       if (window.localStorage.getItem(localStoragePropertyName)) {
         collapseFn();
       }
 
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
   }
@@ -139,13 +135,9 @@ declare const cityssm: cityssmGlobal;
       }, function() {
 
         // No action
-
       });
-
     };
 
     window.setInterval(keepAliveFn, parseInt(keepAliveMillis, 10));
-
   }
-
 }());

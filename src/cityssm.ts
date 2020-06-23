@@ -16,9 +16,7 @@ type confirmModalFn_modalOptions = {
 
 (function() {
 
-
   // NAV BLOCKER
-
 
   let isNavBlockerEnabled = false;
 
@@ -27,12 +25,9 @@ type confirmModalFn_modalOptions = {
     const confirmationMessage = "You have unsaved changes that may be lost.";
     e.returnValue = confirmationMessage;
     return confirmationMessage;
-
   }
 
-
   // ALERT / CONFIRM MODALS
-
 
   function confirmModalFn(modalOptions: confirmModalFn_modalOptions) {
 
@@ -81,9 +76,7 @@ type confirmModalFn_modalOptions = {
       modalEle.getElementsByClassName("is-cancel-button")[0].addEventListener("click", function() {
 
         modalEle.remove();
-
       });
-
     }
 
     const okButtonEle = modalEle.getElementsByClassName("is-ok-button")[0];
@@ -91,58 +84,50 @@ type confirmModalFn_modalOptions = {
 
       modalEle.remove();
       if (modalOptions.callbackFn) {
-
         modalOptions.callbackFn();
-
       }
-
     });
 
     document.body.insertAdjacentElement("beforeend", modalEle);
 
     (<HTMLElement>okButtonEle).focus();
-
   }
 
 
   const cityssm: cityssmGlobal = {
 
-
     // HELPERS
 
 
-    clearElement: function(ele: HTMLElement) {
+    clearElement(ele: HTMLElement) {
       while (ele.firstChild) {
         ele.removeChild(ele.firstChild);
       }
     },
 
-    escapeHTML: function(str: string) {
+    escapeHTML(str: string) {
 
       return String(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
-
     },
 
-    dateToString: function(dateObj: Date) {
+    dateToString(dateObj: Date) {
 
       return dateObj.getFullYear() + "-" +
         ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
         ("0" + (dateObj.getDate())).slice(-2);
-
     },
 
-    dateStringToDate: function(dateString: string) {
+    dateStringToDate(dateString: string) {
 
       const datePieces = dateString.split("-");
       return new Date(parseInt(datePieces[0], 10), parseInt(datePieces[1], 10) - 1, parseInt(datePieces[2], 10), 0, 0, 0, 0);
-
     },
 
-    dateStringDifferenceInDays: function(fromDateString: string, toDateString: string) {
+    dateStringDifferenceInDays(fromDateString: string, toDateString: string) {
 
       const fromDate = cityssm.dateStringToDate(fromDateString);
       const toDate = cityssm.dateStringToDate(toDateString);
@@ -150,15 +135,13 @@ type confirmModalFn_modalOptions = {
       return Math.round((toDate.getTime() - fromDate.getTime()) / (86400 * 1000.0));
     },
 
-
     // FETCH HELPERS
 
-
-    responseToJSON: function(response: Response) {
+    responseToJSON(response: Response) {
       return response.json();
     },
 
-    postJSON: function(fetchUrl: string, formEleOrObj: HTMLFormElement | object, responseFn: (responseJSON: {}) => void) {
+    postJSON(fetchUrl: string, formEleOrObj: HTMLFormElement | object, responseFn: (responseJSON: {}) => void) {
 
       const fetchOptions: RequestInit = {
         method: "POST",
@@ -177,9 +160,7 @@ type confirmModalFn_modalOptions = {
             fetchOptions.body = new FormData(formEle);
 
           } else {
-
             fetchOptions.body = new URLSearchParams(new FormData(formEle));
-
           }
 
 
@@ -190,27 +171,23 @@ type confirmModalFn_modalOptions = {
           };
 
           fetchOptions.body = JSON.stringify(formEleOrObj);
-
         }
-
       }
-
 
       window.fetch(fetchUrl, fetchOptions)
         .then(cityssm.responseToJSON)
         .then(responseFn);
-
     },
 
 
     // MODAL TOGGLES
 
 
-    showModal: function(modalEle: HTMLElement) {
+    showModal(modalEle: HTMLElement) {
       modalEle.classList.add("is-active");
     },
 
-    hideModal: function(internalEle_or_internalEvent: HTMLElement | Event) {
+    hideModal(internalEle_or_internalEvent: HTMLElement | Event) {
 
       let internalEle = internalEle_or_internalEvent;
 
@@ -221,10 +198,9 @@ type confirmModalFn_modalOptions = {
       const modalEle = (internalEle.classList.contains("modal") ? internalEle : internalEle.closest(".modal"));
 
       modalEle.classList.remove("is-active");
-
     },
 
-    openHtmlModal: function(
+    openHtmlModal(
       htmlFileName: string,
       callbackFns: {
 
@@ -254,9 +230,7 @@ type confirmModalFn_modalOptions = {
 
       window.fetch("/html/" + htmlFileName + ".html")
         .then(function(response) {
-
           return response.text();
-
         })
         .then(function(modalHTML) {
 
@@ -290,84 +264,62 @@ type confirmModalFn_modalOptions = {
               const doHide = callbackFns.onhide(modalEle);
 
               if (doHide) {
-
                 return;
-
               }
-
             }
 
             modalEle.classList.remove("is-active");
 
             if (callbackFns && callbackFns.onhidden && modalWasShown) {
-
               callbackFns.onhidden(modalEle);
-
             }
 
             modalContainerEle.remove();
 
             if (callbackFns && callbackFns.onremoved) {
-
               callbackFns.onremoved();
-
             }
-
           };
 
           // Call onshown()
 
           if (callbackFns && callbackFns.onshown) {
-
             callbackFns.onshown(modalEle, closeModalFn);
-
           }
 
           // Set up close buttons
 
           const closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
 
-          for (let btnIndex = 0; btnIndex < closeModalBtnEles.length; btnIndex += 1) {
-
-            closeModalBtnEles[btnIndex].addEventListener("click", closeModalFn);
-
+          for (const closeModalBtnEle of closeModalBtnEles) {
+            closeModalBtnEle.addEventListener("click", closeModalFn);
           }
-
         });
-
     },
 
 
     // NAV BLOCKER
 
 
-    enableNavBlocker: function() {
-
+    enableNavBlocker() {
       if (!isNavBlockerEnabled) {
-
         window.addEventListener("beforeunload", navBlockerEventFn);
         isNavBlockerEnabled = true;
-
       }
-
     },
 
-    disableNavBlocker: function() {
-
+    disableNavBlocker() {
       if (isNavBlockerEnabled) {
-
         window.removeEventListener("beforeunload", navBlockerEventFn);
         isNavBlockerEnabled = false;
-
       }
-
     },
 
 
     // ALERT / CONFIRM MODALS
 
 
-    confirmModal: function(
+    confirmModal(
       titleString: string,
       bodyHTML: string,
       okButtonHTML: string,
@@ -381,10 +333,9 @@ type confirmModalFn_modalOptions = {
         okButtonHTML: okButtonHTML,
         callbackFn: callbackFn
       });
-
     },
 
-    alertModal: function(
+    alertModal(
       titleString: string,
       bodyHTML: string,
       okButtonHTML: string,
@@ -397,12 +348,8 @@ type confirmModalFn_modalOptions = {
         hideCancelButton: true,
         okButtonHTML: okButtonHTML
       });
-
     }
-
   };
 
-
   (<any>window).cityssm = (<any>window).cityssm || cityssm;
-
 }());

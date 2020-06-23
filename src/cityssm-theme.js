@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
-    var navbarEle = document.getElementById("cityssm-theme--navbar");
+    const navbarEle = document.getElementById("cityssm-theme--navbar");
     if (navbarEle) {
         navbarEle.getElementsByClassName("navbar-burger")[0].addEventListener("click", function (clickEvent) {
             clickEvent.currentTarget.classList.toggle("is-active");
@@ -10,7 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
 }());
 (function () {
-    var logoutButtonEle = document.getElementById("cityssm-theme--logout-button");
+    const logoutButtonEle = document.getElementById("cityssm-theme--logout-button");
     if (logoutButtonEle) {
         logoutButtonEle.addEventListener("click", function (clickEvent) {
             clickEvent.preventDefault();
@@ -22,27 +22,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
 }());
 (function () {
-    var localStoragePropertyName = "collapseSidemenu";
-    var collapseButtonEle = document.getElementById("cityssm-theme--sidemenu-collapse-button");
-    var collapseSidemenuEle = document.getElementById("cityssm-theme--sidemenu-collapsed");
-    var expandButtonEle = document.getElementById("cityssm-theme--sidemenu-expand-button");
-    var expandSidemenuEle = document.getElementById("cityssm-theme--sidemenu-expanded");
-    var collapseFn = function () {
+    const localStoragePropertyName = "collapseSidemenu";
+    const collapseButtonEle = document.getElementById("cityssm-theme--sidemenu-collapse-button");
+    const collapseSidemenuEle = document.getElementById("cityssm-theme--sidemenu-collapsed");
+    const expandButtonEle = document.getElementById("cityssm-theme--sidemenu-expand-button");
+    const expandSidemenuEle = document.getElementById("cityssm-theme--sidemenu-expanded");
+    const collapseFn = function () {
         expandSidemenuEle.classList.add("is-hidden");
         collapseSidemenuEle.classList.remove("is-hidden");
         try {
             window.localStorage.setItem(localStoragePropertyName, "true");
         }
-        catch (e) {
+        catch (_e) {
         }
     };
-    var expandFn = function () {
+    const expandFn = function () {
         collapseSidemenuEle.classList.add("is-hidden");
         expandSidemenuEle.classList.remove("is-hidden");
         try {
             window.localStorage.removeItem(localStoragePropertyName);
         }
-        catch (e) {
+        catch (_e) {
         }
     };
     if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
@@ -53,14 +53,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 collapseFn();
             }
         }
-        catch (e) {
+        catch (_e) {
         }
     }
 }());
 (function () {
-    var keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
+    const keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
     if (keepAliveMillis && keepAliveMillis !== "0") {
-        var keepAliveFn = function () {
+        const keepAliveFn = function () {
             cityssm.postJSON("/keepAlive", {
                 t: Date.now()
             }, function () {

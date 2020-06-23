@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var gulp = require("gulp");
-var minify = require("gulp-minify");
+const gulp = require("gulp");
+const minify = require("gulp-minify");
 function jsMinFn() {
     return gulp.src("src/*.js", { allowEmpty: true })
         .pipe(minify({ noSource: true, ext: { min: ".min.js" } }))

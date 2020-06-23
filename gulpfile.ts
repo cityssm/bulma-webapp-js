@@ -9,11 +9,11 @@ function jsMinFn () {
 
   return gulp.src("src/*.js", { allowEmpty: true })
     .pipe(minify({ noSource: true, ext: { min: ".min.js" } }))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('dist'));
 }
 
 
-gulp.task("javascript-min", jsMinFn)
+gulp.task("javascript-min", jsMinFn);
 
 /*
  * Watch

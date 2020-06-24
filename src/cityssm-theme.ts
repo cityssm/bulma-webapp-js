@@ -8,19 +8,19 @@ declare const cityssm: cityssmGlobal;
 */
 
 
-(function() {
+(() => {
 
   const navbarEle = document.getElementById("cityssm-theme--navbar");
 
   if (navbarEle) {
-    navbarEle.getElementsByClassName("navbar-burger")[0].addEventListener("click", function(clickEvent) {
+    navbarEle.getElementsByClassName("navbar-burger")[0].addEventListener("click", (clickEvent) => {
 
       (<Element>clickEvent.currentTarget).classList.toggle("is-active");
       navbarEle.getElementsByClassName("navbar-menu")[0].classList.toggle("is-active");
     });
   }
 
-}());
+})();
 
 
 /*
@@ -28,13 +28,13 @@ declare const cityssm: cityssmGlobal;
  */
 
 
-(function() {
+(() => {
 
   const logoutButtonEle = document.getElementById("cityssm-theme--logout-button");
 
   if (logoutButtonEle) {
 
-    logoutButtonEle.addEventListener("click", function(clickEvent) {
+    logoutButtonEle.addEventListener("click", (clickEvent) => {
 
       clickEvent.preventDefault();
 
@@ -43,18 +43,14 @@ declare const cityssm: cityssmGlobal;
         "<p>Are you sure you want to log out?</p>",
         "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>",
         "warning",
-        function() {
-
+        () => {
           window.localStorage.clear();
           window.location.href = "/logout";
-
         }
       );
-
     });
   }
-
-}());
+})();
 
 
 /*
@@ -62,7 +58,7 @@ declare const cityssm: cityssmGlobal;
  */
 
 
-(function() {
+(() => {
 
   const localStoragePropertyName = "collapseSidemenu";
 
@@ -72,7 +68,7 @@ declare const cityssm: cityssmGlobal;
   const expandButtonEle = document.getElementById("cityssm-theme--sidemenu-expand-button");
   const expandSidemenuEle = document.getElementById("cityssm-theme--sidemenu-expanded");
 
-  const collapseFn = function() {
+  const collapseFn = () => {
 
     expandSidemenuEle.classList.add("is-hidden");
     collapseSidemenuEle.classList.remove("is-hidden");
@@ -86,7 +82,7 @@ declare const cityssm: cityssmGlobal;
 
   };
 
-  const expandFn = function() {
+  const expandFn = () => {
 
     collapseSidemenuEle.classList.add("is-hidden");
     expandSidemenuEle.classList.remove("is-hidden");
@@ -97,7 +93,6 @@ declare const cityssm: cityssmGlobal;
     } catch (_e) {
       // Ignore
     }
-
   };
 
   if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
@@ -114,7 +109,7 @@ declare const cityssm: cityssmGlobal;
       // Ignore
     }
   }
-}());
+})();
 
 
 /*
@@ -122,22 +117,20 @@ declare const cityssm: cityssmGlobal;
  */
 
 
-(function() {
+(() => {
 
   const keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
 
   if (keepAliveMillis && keepAliveMillis !== "0") {
 
-    const keepAliveFn = function() {
+    const keepAliveFn = () => {
 
       cityssm.postJSON("/keepAlive", {
         t: Date.now()
-      }, function() {
-
-        // No action
-      });
+      },
+        () => { });
     };
 
     window.setInterval(keepAliveFn, parseInt(keepAliveMillis, 10));
   }
-}());
+})();

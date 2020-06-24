@@ -10,26 +10,26 @@ type confirmModalFn_modalOptions = {
   cancelButtonHTML?: string,
 
   okButtonHTML: string,
-  callbackFn?: Function
+  callbackFn?: () => any
 };
 
 
-(function() {
+(() => {
 
   // NAV BLOCKER
 
   let isNavBlockerEnabled = false;
 
-  function navBlockerEventFn(e: BeforeUnloadEvent) {
+  const navBlockerEventFn = (e: BeforeUnloadEvent) => {
 
     const confirmationMessage = "You have unsaved changes that may be lost.";
     e.returnValue = confirmationMessage;
     return confirmationMessage;
-  }
+  };
 
   // ALERT / CONFIRM MODALS
 
-  function confirmModalFn(modalOptions: confirmModalFn_modalOptions) {
+  const confirmModalFn = (modalOptions: confirmModalFn_modalOptions) => {
 
     const modalEle = document.createElement("div");
     modalEle.className = "modal is-active";
@@ -73,14 +73,13 @@ type confirmModalFn_modalOptions = {
 
     if (!modalOptions.hideCancelButton) {
 
-      modalEle.getElementsByClassName("is-cancel-button")[0].addEventListener("click", function() {
-
+      modalEle.getElementsByClassName("is-cancel-button")[0].addEventListener("click", () => {
         modalEle.remove();
       });
     }
 
     const okButtonEle = modalEle.getElementsByClassName("is-ok-button")[0];
-    okButtonEle.addEventListener("click", function() {
+    okButtonEle.addEventListener("click", () => {
 
       modalEle.remove();
       if (modalOptions.callbackFn) {
@@ -91,13 +90,12 @@ type confirmModalFn_modalOptions = {
     document.body.insertAdjacentElement("beforeend", modalEle);
 
     (<HTMLElement>okButtonEle).focus();
-  }
+  };
 
 
   const cityssm: cityssmGlobal = {
 
     // HELPERS
-
 
     clearElement(ele: HTMLElement) {
       while (ele.firstChild) {
@@ -228,10 +226,8 @@ type confirmModalFn_modalOptions = {
       */
 
       window.fetch("/html/" + htmlFileName + ".html")
-        .then(function(response) {
-          return response.text();
-        })
-        .then(function(modalHTML) {
+        .then((response) => response.text())
+        .then((modalHTML) => {
 
           // Append the modal to the end of the body
 
@@ -254,7 +250,7 @@ type confirmModalFn_modalOptions = {
 
           modalEle.classList.add("is-active");
 
-          const closeModalFn = function() {
+          const closeModalFn = () => {
 
             const modalWasShown = modalEle.classList.contains("is-active");
 
@@ -351,4 +347,4 @@ type confirmModalFn_modalOptions = {
   };
 
   (<any>window).cityssm = (<any>window).cityssm || cityssm;
-}());
+})();

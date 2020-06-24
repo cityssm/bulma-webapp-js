@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     let isNavBlockerEnabled = false;
-    function navBlockerEventFn(e) {
+    const navBlockerEventFn = (e) => {
         const confirmationMessage = "You have unsaved changes that may be lost.";
         e.returnValue = confirmationMessage;
         return confirmationMessage;
-    }
-    function confirmModalFn(modalOptions) {
+    };
+    const confirmModalFn = (modalOptions) => {
         const modalEle = document.createElement("div");
         modalEle.className = "modal is-active";
         const contextualColorName = modalOptions.contextualColorName || "info";
@@ -38,12 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</div>";
         modalEle.getElementsByClassName("message-header")[0].getElementsByTagName("span")[0].innerText = titleString;
         if (!modalOptions.hideCancelButton) {
-            modalEle.getElementsByClassName("is-cancel-button")[0].addEventListener("click", function () {
+            modalEle.getElementsByClassName("is-cancel-button")[0].addEventListener("click", () => {
                 modalEle.remove();
             });
         }
         const okButtonEle = modalEle.getElementsByClassName("is-ok-button")[0];
-        okButtonEle.addEventListener("click", function () {
+        okButtonEle.addEventListener("click", () => {
             modalEle.remove();
             if (modalOptions.callbackFn) {
                 modalOptions.callbackFn();
@@ -51,7 +51,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
         document.body.insertAdjacentElement("beforeend", modalEle);
         okButtonEle.focus();
-    }
+    };
     const cityssm = {
         clearElement(ele) {
             while (ele.firstChild) {
@@ -121,10 +121,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         },
         openHtmlModal(htmlFileName, callbackFns) {
             window.fetch("/html/" + htmlFileName + ".html")
-                .then(function (response) {
-                return response.text();
-            })
-                .then(function (modalHTML) {
+                .then((response) => response.text())
+                .then((modalHTML) => {
                 const modalContainerEle = document.createElement("div");
                 modalContainerEle.innerHTML = modalHTML;
                 const modalEle = modalContainerEle.getElementsByClassName("modal")[0];
@@ -133,7 +131,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     callbackFns.onshow(modalEle);
                 }
                 modalEle.classList.add("is-active");
-                const closeModalFn = function () {
+                const closeModalFn = () => {
                     const modalWasShown = modalEle.classList.contains("is-active");
                     if (callbackFns && callbackFns.onhide && modalWasShown) {
                         const doHide = callbackFns.onhide(modalEle);
@@ -191,4 +189,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     };
     window.cityssm = window.cityssm || cityssm;
-}());
+})();

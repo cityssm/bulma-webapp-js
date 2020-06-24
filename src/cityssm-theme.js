@@ -1,33 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
+(() => {
     const navbarEle = document.getElementById("cityssm-theme--navbar");
     if (navbarEle) {
-        navbarEle.getElementsByClassName("navbar-burger")[0].addEventListener("click", function (clickEvent) {
+        navbarEle.getElementsByClassName("navbar-burger")[0].addEventListener("click", (clickEvent) => {
             clickEvent.currentTarget.classList.toggle("is-active");
             navbarEle.getElementsByClassName("navbar-menu")[0].classList.toggle("is-active");
         });
     }
-}());
-(function () {
+})();
+(() => {
     const logoutButtonEle = document.getElementById("cityssm-theme--logout-button");
     if (logoutButtonEle) {
-        logoutButtonEle.addEventListener("click", function (clickEvent) {
+        logoutButtonEle.addEventListener("click", (clickEvent) => {
             clickEvent.preventDefault();
-            cityssm.confirmModal("Log Out?", "<p>Are you sure you want to log out?</p>", "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>", "warning", function () {
+            cityssm.confirmModal("Log Out?", "<p>Are you sure you want to log out?</p>", "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>", "warning", () => {
                 window.localStorage.clear();
                 window.location.href = "/logout";
             });
         });
     }
-}());
-(function () {
+})();
+(() => {
     const localStoragePropertyName = "collapseSidemenu";
     const collapseButtonEle = document.getElementById("cityssm-theme--sidemenu-collapse-button");
     const collapseSidemenuEle = document.getElementById("cityssm-theme--sidemenu-collapsed");
     const expandButtonEle = document.getElementById("cityssm-theme--sidemenu-expand-button");
     const expandSidemenuEle = document.getElementById("cityssm-theme--sidemenu-expanded");
-    const collapseFn = function () {
+    const collapseFn = () => {
         expandSidemenuEle.classList.add("is-hidden");
         collapseSidemenuEle.classList.remove("is-hidden");
         try {
@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         catch (_e) {
         }
     };
-    const expandFn = function () {
+    const expandFn = () => {
         collapseSidemenuEle.classList.add("is-hidden");
         expandSidemenuEle.classList.remove("is-hidden");
         try {
@@ -56,16 +56,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
         catch (_e) {
         }
     }
-}());
-(function () {
+})();
+(() => {
     const keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
     if (keepAliveMillis && keepAliveMillis !== "0") {
-        const keepAliveFn = function () {
+        const keepAliveFn = () => {
             cityssm.postJSON("/keepAlive", {
                 t: Date.now()
-            }, function () {
-            });
+            }, () => { });
         };
         window.setInterval(keepAliveFn, parseInt(keepAliveMillis, 10));
     }
-}());
+})();

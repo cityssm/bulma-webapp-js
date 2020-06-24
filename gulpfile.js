@@ -2,17 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const gulp = require("gulp");
 const minify = require("gulp-minify");
-function jsMinFn() {
+const jsMinFn = () => {
     return gulp.src("src/*.js", { allowEmpty: true })
         .pipe(minify({ noSource: true, ext: { min: ".min.js" } }))
         .pipe(gulp.dest('dist'));
-}
+};
 gulp.task("javascript-min", jsMinFn);
-function watchFn() {
+const watchFn = () => {
     gulp.watch("src/*.js", jsMinFn);
-}
+};
 gulp.task("watch", watchFn);
-gulp.task("default", function () {
+gulp.task("default", () => {
     jsMinFn();
     watchFn();
 });

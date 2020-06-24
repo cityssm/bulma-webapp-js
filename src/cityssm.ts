@@ -203,11 +203,10 @@ type confirmModalFn_modalOptions = {
     openHtmlModal(
       htmlFileName: string,
       callbackFns: {
-
-        onshow?: (modalEle: Element) => void,
-        onshown?: (modalEle: Element, closeModalFn: Function) => void,
-        onhide?: (modalEle: Element) => boolean
-        onhidden?: (modalEle: Element) => void,
+        onshow?: (modalEle: HTMLElement) => void,
+        onshown?: (modalEle: HTMLElement, closeModalFn: () => void) => void,
+        onhide?: (modalEle: HTMLElement) => boolean
+        onhidden?: (modalEle: HTMLElement) => void,
         onremoved?: () => void,
 
       }) {
@@ -239,7 +238,7 @@ type confirmModalFn_modalOptions = {
           const modalContainerEle = document.createElement("div");
           modalContainerEle.innerHTML = modalHTML;
 
-          const modalEle = modalContainerEle.getElementsByClassName("modal")[0];
+          const modalEle = <HTMLElement>modalContainerEle.getElementsByClassName("modal")[0];
 
           document.body.insertAdjacentElement("beforeend", modalContainerEle);
 

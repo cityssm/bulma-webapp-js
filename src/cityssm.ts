@@ -322,11 +322,11 @@ type confirmModalFn_modalOptions = {
       callbackFn: () => void) {
 
       confirmModalFn({
-        contextualColorName: contextualColorName,
-        titleString: titleString,
-        bodyHTML: bodyHTML,
-        okButtonHTML: okButtonHTML,
-        callbackFn: callbackFn
+        contextualColorName,
+        titleString,
+        bodyHTML,
+        okButtonHTML,
+        callbackFn
       });
     },
 
@@ -337,11 +337,11 @@ type confirmModalFn_modalOptions = {
       contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger") {
 
       confirmModalFn({
-        contextualColorName: contextualColorName,
-        titleString: titleString,
-        bodyHTML: bodyHTML,
+        contextualColorName,
+        titleString,
+        bodyHTML,
         hideCancelButton: true,
-        okButtonHTML: okButtonHTML
+        okButtonHTML
       });
     }
   };

@@ -171,20 +171,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
         },
         confirmModal(titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) {
             confirmModalFn({
-                contextualColorName: contextualColorName,
-                titleString: titleString,
-                bodyHTML: bodyHTML,
-                okButtonHTML: okButtonHTML,
-                callbackFn: callbackFn
+                contextualColorName,
+                titleString,
+                bodyHTML,
+                okButtonHTML,
+                callbackFn
             });
         },
         alertModal(titleString, bodyHTML, okButtonHTML, contextualColorName) {
             confirmModalFn({
-                contextualColorName: contextualColorName,
-                titleString: titleString,
-                bodyHTML: bodyHTML,
+                contextualColorName,
+                titleString,
+                bodyHTML,
                 hideCancelButton: true,
-                okButtonHTML: okButtonHTML
+                okButtonHTML
             });
         }
     };

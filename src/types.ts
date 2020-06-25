@@ -10,10 +10,10 @@ export type cityssmGlobal = {
   hideModal: (internalElementOrEvent: HTMLElement | Event) => void,
 
   openHtmlModal: (htmlFileName: string, callbackFns: {
-    onshow?: (modalEle: Element) => void,
-    onshown?: (modalEle: Element, closeModalFn: () => void) => void,
-    onhide?: (modalEle: Element) => boolean
-    onhidden?: (modalEle: Element) => void,
+    onshow?: (modalEle: HTMLElement) => void,
+    onshown?: (modalEle: HTMLElement, closeModalFn: () => void) => void,
+    onhide?: (modalEle: HTMLElement) => boolean
+    onhidden?: (modalEle: HTMLElement) => void,
     onremoved?: () => void,
   }) => void,
 

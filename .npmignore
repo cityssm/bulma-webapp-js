@@ -1,5 +1,6 @@
 .atomignore
 .eslintrc.yml
 .npmignore
+gulpfile.*
 tsconfig.json
 tslint.json

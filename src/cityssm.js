@@ -52,6 +52,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         document.body.insertAdjacentElement("beforeend", modalEle);
         okButtonEle.focus();
     };
+    const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
     const cityssm = {
         clearElement(ele) {
             while (ele.firstChild) {
@@ -85,7 +86,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
         postJSON(fetchUrl, formEleOrObj, responseFn) {
             const fetchOptions = {
                 method: "POST",
-                credentials: "include"
+                credentials: "same-origin",
+                headers: {
+                    "CSRF-Token": csrfToken
+                }
             };
             if (formEleOrObj) {
                 if (formEleOrObj instanceof HTMLFormElement) {
@@ -98,9 +102,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     }
                 }
                 else if (formEleOrObj instanceof Object) {
-                    fetchOptions.headers = {
-                        "Content-Type": "application/json"
-                    };
+                    fetchOptions.headers["Content-Type"] = "application/json";
                     fetchOptions.body = JSON.stringify(formEleOrObj);
                 }
             }

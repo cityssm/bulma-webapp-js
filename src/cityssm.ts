@@ -93,6 +93,9 @@ type confirmModalFn_modalOptions = {
   };
 
 
+  const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
+
   const cityssm: cityssmGlobal = {
 
     // HELPERS
@@ -143,7 +146,10 @@ type confirmModalFn_modalOptions = {
 
       const fetchOptions: RequestInit = {
         method: "POST",
-        credentials: "include"
+        credentials: "same-origin",
+        headers: {
+          "CSRF-Token": csrfToken
+        }
       };
 
 
@@ -164,9 +170,7 @@ type confirmModalFn_modalOptions = {
 
         } else if (formEleOrObj instanceof Object) {
 
-          fetchOptions.headers = {
-            "Content-Type": "application/json"
-          };
+          fetchOptions.headers["Content-Type"] = "application/json";
 
           fetchOptions.body = JSON.stringify(formEleOrObj);
         }

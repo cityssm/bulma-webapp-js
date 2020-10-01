@@ -1,6 +1,6 @@
 {
   "name": "@cityssm/bulma-webapp-js",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "Shared JavaScript files for lottery-licence-manager and parking-ticket-system.",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/cityssm/bulma-webapp-js#readme",
   "devDependencies": {
-    "@types/gulp": "^4.0.6",
+    "@types/gulp": "^4.0.7",
     "@types/gulp-minify": "^3.1.0",
     "gulp": "^4.0.2",
     "gulp-minify": "^3.1.0"

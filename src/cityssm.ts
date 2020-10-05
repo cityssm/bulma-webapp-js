@@ -93,7 +93,8 @@ type confirmModalFn_modalOptions = {
   };
 
 
-  const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+  const csrfTokenEle = document.querySelector("meta[name='csrf-token']");
+  const csrfToken = (csrfTokenEle ? csrfTokenEle.getAttribute("content") : "");
 
 
   const cityssm: cityssmGlobal = {

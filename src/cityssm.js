@@ -52,7 +52,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         document.body.insertAdjacentElement("beforeend", modalEle);
         okButtonEle.focus();
     };
-    const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+    const csrfTokenEle = document.querySelector("meta[name='csrf-token']");
+    const csrfToken = (csrfTokenEle ? csrfTokenEle.getAttribute("content") : "");
     const cityssm = {
         clearElement(ele) {
             while (ele.firstChild) {

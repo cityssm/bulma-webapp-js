@@ -1,17 +1,17 @@
 import { cityssmGlobal } from "./types";
 
-type confirmModalFn_modalOptions = {
+interface confirmModalFn_modalOptions {
 
-  contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger",
-  titleString: string,
-  bodyHTML: string,
+  contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger";
+  titleString: string;
+  bodyHTML: string;
 
-  hideCancelButton?: boolean,
-  cancelButtonHTML?: string,
+  hideCancelButton?: boolean;
+  cancelButtonHTML?: string;
 
-  okButtonHTML: string,
-  callbackFn?: () => any
-};
+  okButtonHTML: string;
+  callbackFn?: () => any;
+}
 
 
 (() => {
@@ -54,9 +54,9 @@ type confirmModalFn_modalOptions = {
         (bodyHTML === "" ? "" : "<div class=\"mb-4\">" + bodyHTML + "</div>") +
 
         ("<div class=\"buttons is-block has-text-right\">" +
-          (modalOptions.hideCancelButton ?
-            "" :
-            "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
+          (modalOptions.hideCancelButton
+            ? ""
+            : "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
             cancelButtonHTML +
             "</button>") +
           ("<button class=\"button is-ok-button is-" + contextualColorName + "\" type=\"button\" aria-label=\"OK\">" +
@@ -89,7 +89,7 @@ type confirmModalFn_modalOptions = {
 
     document.body.insertAdjacentElement("beforeend", modalEle);
 
-    (<HTMLElement>okButtonEle).focus();
+    (okButtonEle as HTMLElement).focus();
   };
 
 
@@ -118,9 +118,9 @@ type confirmModalFn_modalOptions = {
 
     dateToString(dateObj: Date) {
 
-      return dateObj.getFullYear() + "-" +
-        ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
-        ("0" + (dateObj.getDate())).slice(-2);
+      return dateObj.getFullYear().toString() + "-" +
+        ("0" + (dateObj.getMonth() + 1).toString()).slice(-2) + "-" +
+        ("0" + (dateObj.getDate().toString())).slice(-2);
     },
 
     dateStringToDate(dateString: string) {
@@ -139,8 +139,8 @@ type confirmModalFn_modalOptions = {
 
     // FETCH HELPERS
 
-    responseToJSON(response: Response) {
-      return response.json();
+    responseToJSON: async(response: Response) => {
+      return await response.json();
     },
 
     postJSON(fetchUrl: string, formEleOrObj: HTMLFormElement | object, responseFn: (responseJSON: {}) => void) {
@@ -158,7 +158,7 @@ type confirmModalFn_modalOptions = {
 
         if (formEleOrObj instanceof HTMLFormElement) {
 
-          const formEle = formEleOrObj as HTMLFormElement;
+          const formEle = formEleOrObj;
 
           if (formEle.querySelector("input[name][type='file']")) {
 
@@ -179,7 +179,10 @@ type confirmModalFn_modalOptions = {
 
       window.fetch(fetchUrl, fetchOptions)
         .then(cityssm.responseToJSON)
-        .then(responseFn);
+        .then(responseFn)
+        .catch(() => {
+          cityssm.alertModal("Error", "Error communicating with the server.", "OK", "danger");
+        });
     },
 
 
@@ -206,11 +209,11 @@ type confirmModalFn_modalOptions = {
     openHtmlModal(
       htmlFileName: string,
       callbackFns: {
-        onshow?: (modalEle: HTMLElement) => void,
-        onshown?: (modalEle: HTMLElement, closeModalFn: () => void) => void,
-        onhide?: (modalEle: HTMLElement) => boolean
-        onhidden?: (modalEle: HTMLElement) => void,
-        onremoved?: () => void,
+        onshow?: (modalEle: HTMLElement) => void;
+        onshown?: (modalEle: HTMLElement, closeModalFn: () => void) => void;
+        onhide?: (modalEle: HTMLElement) => boolean;
+        onhidden?: (modalEle: HTMLElement) => void;
+        onremoved?: () => void;
 
       }) {
 
@@ -231,21 +234,21 @@ type confirmModalFn_modalOptions = {
       */
 
       window.fetch("/html/" + htmlFileName + ".html")
-        .then((response) => response.text())
-        .then((modalHTML) => {
+        .then(async(response) => await response.text())
+        .then(async(modalHTML) => {
 
           // Append the modal to the end of the body
 
           const modalContainerEle = document.createElement("div");
           modalContainerEle.innerHTML = modalHTML;
 
-          const modalEle = <HTMLElement>modalContainerEle.getElementsByClassName("modal")[0];
+          const modalEle = modalContainerEle.getElementsByClassName("modal")[0] as HTMLElement;
 
           document.body.insertAdjacentElement("beforeend", modalContainerEle);
 
           // Call onshow()
 
-          if (callbackFns && callbackFns.onshow) {
+          if (callbackFns?.onshow) {
 
             callbackFns.onshow(modalEle);
 
@@ -259,7 +262,7 @@ type confirmModalFn_modalOptions = {
 
             const modalWasShown = modalEle.classList.contains("is-active");
 
-            if (callbackFns && callbackFns.onhide && modalWasShown) {
+            if (callbackFns?.onhide && modalWasShown) {
 
               const doHide = callbackFns.onhide(modalEle);
 
@@ -270,20 +273,20 @@ type confirmModalFn_modalOptions = {
 
             modalEle.classList.remove("is-active");
 
-            if (callbackFns && callbackFns.onhidden && modalWasShown) {
+            if (callbackFns?.onhidden && modalWasShown) {
               callbackFns.onhidden(modalEle);
             }
 
             modalContainerEle.remove();
 
-            if (callbackFns && callbackFns.onremoved) {
+            if (callbackFns?.onremoved) {
               callbackFns.onremoved();
             }
           };
 
           // Call onshown()
 
-          if (callbackFns && callbackFns.onshown) {
+          if (callbackFns?.onshown) {
             callbackFns.onshown(modalEle, closeModalFn);
           }
 
@@ -294,6 +297,9 @@ type confirmModalFn_modalOptions = {
           for (const closeModalBtnEle of closeModalBtnEles) {
             closeModalBtnEle.addEventListener("click", closeModalFn);
           }
+        })
+        .catch(() => {
+          cityssm.alertModal("Error", "Error loading popup.", "OK", "danger");
         });
     },
 
@@ -313,6 +319,10 @@ type confirmModalFn_modalOptions = {
         window.removeEventListener("beforeunload", navBlockerEventFn);
         isNavBlockerEnabled = false;
       }
+    },
+
+    isNavBlockerEnabled() {
+      return isNavBlockerEnabled;
     },
 
 
@@ -351,5 +361,5 @@ type confirmModalFn_modalOptions = {
     }
   };
 
-  (<any>window).cityssm = (<any>window).cityssm || cityssm;
+  (window as any).cityssm = (window as any).cityssm || cityssm;
 })();

@@ -1,4 +1,4 @@
-export declare type cityssmGlobal = {
+export interface cityssmGlobal {
     clearElement: (element: HTMLElement) => void;
     escapeHTML: (unescapedString: string) => string;
     postJSON: (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: any) => void) => void;
@@ -19,4 +19,5 @@ export declare type cityssmGlobal = {
     dateStringDifferenceInDays: (toDateString: string, fromDateString: string) => number;
     enableNavBlocker: () => void;
     disableNavBlocker: () => void;
-};
+    isNavBlockerEnabled: () => boolean;
+}

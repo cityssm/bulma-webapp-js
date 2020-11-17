@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     let isNavBlockerEnabled = false;
@@ -24,9 +33,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ("<section class=\"message-body\">" +
                 (bodyHTML === "" ? "" : "<div class=\"mb-4\">" + bodyHTML + "</div>") +
                 ("<div class=\"buttons is-block has-text-right\">" +
-                    (modalOptions.hideCancelButton ?
-                        "" :
-                        "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
+                    (modalOptions.hideCancelButton
+                        ? ""
+                        : "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
                             cancelButtonHTML +
                             "</button>") +
                     ("<button class=\"button is-ok-button is-" + contextualColorName + "\" type=\"button\" aria-label=\"OK\">" +
@@ -68,9 +77,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 .replace(/"/g, "&quot;");
         },
         dateToString(dateObj) {
-            return dateObj.getFullYear() + "-" +
-                ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
-                ("0" + (dateObj.getDate())).slice(-2);
+            return dateObj.getFullYear().toString() + "-" +
+                ("0" + (dateObj.getMonth() + 1).toString()).slice(-2) + "-" +
+                ("0" + (dateObj.getDate().toString())).slice(-2);
         },
         dateStringToDate(dateString) {
             const datePieces = dateString.split("-");
@@ -81,9 +90,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const toDate = cityssm.dateStringToDate(toDateString);
             return Math.round((toDate.getTime() - fromDate.getTime()) / (86400 * 1000.0));
         },
-        responseToJSON(response) {
-            return response.json();
-        },
+        responseToJSON: (response) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield response.json();
+        }),
         postJSON(fetchUrl, formEleOrObj, responseFn) {
             const fetchOptions = {
                 method: "POST",
@@ -109,7 +118,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             window.fetch(fetchUrl, fetchOptions)
                 .then(cityssm.responseToJSON)
-                .then(responseFn);
+                .then(responseFn)
+                .catch(() => {
+                cityssm.alertModal("Error", "Error communicating with the server.", "OK", "danger");
+            });
         },
         showModal(modalEle) {
             modalEle.classList.add("is-active");
@@ -124,40 +136,43 @@ Object.defineProperty(exports, "__esModule", { value: true });
         },
         openHtmlModal(htmlFileName, callbackFns) {
             window.fetch("/html/" + htmlFileName + ".html")
-                .then((response) => response.text())
-                .then((modalHTML) => {
+                .then((response) => __awaiter(this, void 0, void 0, function* () { return yield response.text(); }))
+                .then((modalHTML) => __awaiter(this, void 0, void 0, function* () {
                 const modalContainerEle = document.createElement("div");
                 modalContainerEle.innerHTML = modalHTML;
                 const modalEle = modalContainerEle.getElementsByClassName("modal")[0];
                 document.body.insertAdjacentElement("beforeend", modalContainerEle);
-                if (callbackFns && callbackFns.onshow) {
+                if (callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onshow) {
                     callbackFns.onshow(modalEle);
                 }
                 modalEle.classList.add("is-active");
                 const closeModalFn = () => {
                     const modalWasShown = modalEle.classList.contains("is-active");
-                    if (callbackFns && callbackFns.onhide && modalWasShown) {
+                    if ((callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onhide) && modalWasShown) {
                         const doHide = callbackFns.onhide(modalEle);
                         if (doHide) {
                             return;
                         }
                     }
                     modalEle.classList.remove("is-active");
-                    if (callbackFns && callbackFns.onhidden && modalWasShown) {
+                    if ((callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onhidden) && modalWasShown) {
                         callbackFns.onhidden(modalEle);
                     }
                     modalContainerEle.remove();
-                    if (callbackFns && callbackFns.onremoved) {
+                    if (callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onremoved) {
                         callbackFns.onremoved();
                     }
                 };
-                if (callbackFns && callbackFns.onshown) {
+                if (callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onshown) {
                     callbackFns.onshown(modalEle, closeModalFn);
                 }
                 const closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
                 for (const closeModalBtnEle of closeModalBtnEles) {
                     closeModalBtnEle.addEventListener("click", closeModalFn);
                 }
+            }))
+                .catch(() => {
+                cityssm.alertModal("Error", "Error loading popup.", "OK", "danger");
             });
         },
         enableNavBlocker() {
@@ -171,6 +186,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 window.removeEventListener("beforeunload", navBlockerEventFn);
                 isNavBlockerEnabled = false;
             }
+        },
+        isNavBlockerEnabled() {
+            return isNavBlockerEnabled;
         },
         confirmModal(titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) {
             confirmModalFn({

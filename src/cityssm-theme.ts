@@ -15,7 +15,7 @@ declare const cityssm: cityssmGlobal;
   if (navbarEle) {
     navbarEle.getElementsByClassName("navbar-burger")[0].addEventListener("click", (clickEvent) => {
 
-      (<Element>clickEvent.currentTarget).classList.toggle("is-active");
+      (clickEvent.currentTarget as HTMLElement).classList.toggle("is-active");
       navbarEle.getElementsByClassName("navbar-menu")[0].classList.toggle("is-active");
     });
   }

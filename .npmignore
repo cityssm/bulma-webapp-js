@@ -1,5 +1,7 @@
+.github
 .atomignore
 .eslintignore
 .eslintrc.js
+.snyk
 gulpfile.*
 tsconfig.json

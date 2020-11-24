@@ -44,8 +44,10 @@ declare const cityssm: cityssmGlobal;
         "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>",
         "warning",
         () => {
+          const urlPrefix = document.getElementsByTagName("main")[0].getAttribute("data-url-prefix");
+
           window.localStorage.clear();
-          window.location.href = "/logout";
+          window.location.href = urlPrefix + "/logout";
         }
       );
     });
@@ -123,9 +125,11 @@ declare const cityssm: cityssmGlobal;
 
   if (keepAliveMillis && keepAliveMillis !== "0") {
 
+    const urlPrefix = document.getElementsByTagName("main")[0].getAttribute("data-url-prefix");
+
     const keepAliveFn = () => {
 
-      cityssm.postJSON("/keepAlive", {
+      cityssm.postJSON(urlPrefix + "/keepAlive", {
         t: Date.now()
       },
         () => { });

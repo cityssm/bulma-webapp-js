@@ -134,8 +134,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const modalEle = (internalEle.classList.contains("modal") ? internalEle : internalEle.closest(".modal"));
             modalEle.classList.remove("is-active");
         },
+        htmlModalFolder: "/html/",
         openHtmlModal(htmlFileName, callbackFns) {
-            window.fetch("/html/" + htmlFileName + ".html")
+            window.fetch(cityssm.htmlModalFolder + htmlFileName + ".html")
                 .then((response) => __awaiter(this, void 0, void 0, function* () { return yield response.text(); }))
                 .then((modalHTML) => __awaiter(this, void 0, void 0, function* () {
                 const modalContainerEle = document.createElement("div");

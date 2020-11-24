@@ -9,6 +9,8 @@ export interface cityssmGlobal {
   showModal: (modalEle: HTMLElement) => void;
   hideModal: (internalElementOrEvent: HTMLElement | Event) => void;
 
+  htmlModalFolder: string;
+
   openHtmlModal: (htmlFileName: string, callbackFns: {
     onshow?: (modalEle: HTMLElement) => void;
     onshown?: (modalEle: HTMLElement, closeModalFn: () => void) => void;

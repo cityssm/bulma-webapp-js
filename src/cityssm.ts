@@ -206,6 +206,8 @@ interface confirmModalFn_modalOptions {
       modalEle.classList.remove("is-active");
     },
 
+    htmlModalFolder: "/html/",
+
     openHtmlModal(
       htmlFileName: string,
       callbackFns: {
@@ -233,7 +235,7 @@ interface confirmModalFn_modalOptions {
       *     no longer part of the DOM
       */
 
-      window.fetch("/html/" + htmlFileName + ".html")
+      window.fetch(cityssm.htmlModalFolder + htmlFileName + ".html")
         .then(async(response) => await response.text())
         .then(async(modalHTML) => {
 

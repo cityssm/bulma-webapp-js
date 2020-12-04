@@ -45,13 +45,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 "</section>") +
             "</div>" +
             "</div>";
-        modalEle.getElementsByClassName("message-header")[0].getElementsByTagName("span")[0].innerText = titleString;
+        modalEle.querySelector(".message-header").querySelector("span").innerText = titleString;
         if (!modalOptions.hideCancelButton) {
-            modalEle.getElementsByClassName("is-cancel-button")[0].addEventListener("click", () => {
+            modalEle.querySelector(".is-cancel-button").addEventListener("click", () => {
                 modalEle.remove();
             });
         }
-        const okButtonEle = modalEle.getElementsByClassName("is-ok-button")[0];
+        const okButtonEle = modalEle.querySelector(".is-ok-button");
         okButtonEle.addEventListener("click", () => {
             modalEle.remove();
             if (modalOptions.callbackFn) {
@@ -141,7 +141,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 .then((modalHTML) => __awaiter(void 0, void 0, void 0, function* () {
                 const modalContainerEle = document.createElement("div");
                 modalContainerEle.innerHTML = modalHTML;
-                const modalEle = modalContainerEle.getElementsByClassName("modal")[0];
+                const modalEle = modalContainerEle.querySelector(".modal");
                 document.body.insertAdjacentElement("beforeend", modalContainerEle);
                 if (callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onshow) {
                     callbackFns.onshow(modalEle);

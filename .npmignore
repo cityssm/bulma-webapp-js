@@ -1,6 +1,10 @@
 .github
+
 .atomignore
+.codeclimate.yml
 .eslintignore
 .eslintrc.js
+.gitignore
+.npmignore
 gulpfile.*
 tsconfig.json

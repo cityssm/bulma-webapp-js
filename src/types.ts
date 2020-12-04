@@ -22,7 +22,9 @@ export interface cityssmGlobal {
   clearElement: (element: HTMLElement) => void;
   escapeHTML: (unescapedString: string) => string;
 
-  postJSON: (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: ParsedJSON) => void) => void;
+  postJSON:
+  (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: ParsedJSON) => void) => void;
+
   responseToJSON: (response: Response) => Promise<ParsedJSON>;
 
   showModal: (modalEle: HTMLElement) => void;

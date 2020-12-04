@@ -56,16 +56,16 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
       "</div>" +
       "</div>";
 
-    modalEle.getElementsByClassName("message-header")[0].getElementsByTagName("span")[0].innerText = titleString;
+    modalEle.querySelector(".message-header").querySelector("span").innerText = titleString;
 
     if (!modalOptions.hideCancelButton) {
 
-      modalEle.getElementsByClassName("is-cancel-button")[0].addEventListener("click", () => {
+      modalEle.querySelector(".is-cancel-button").addEventListener("click", () => {
         modalEle.remove();
       });
     }
 
-    const okButtonEle = modalEle.getElementsByClassName("is-ok-button")[0];
+    const okButtonEle = modalEle.querySelector(".is-ok-button");
     okButtonEle.addEventListener("click", () => {
 
       modalEle.remove();
@@ -113,6 +113,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
     dateStringToDate: (dateString) => {
 
       const datePieces = dateString.split("-");
+
       return new Date(
         parseInt(datePieces[0], 10),
         parseInt(datePieces[1], 10) - 1,
@@ -225,7 +226,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
           const modalContainerEle = document.createElement("div");
           modalContainerEle.innerHTML = modalHTML;
 
-          const modalEle = modalContainerEle.getElementsByClassName("modal")[0] as HTMLElement;
+          const modalEle: HTMLElement = modalContainerEle.querySelector(".modal");
 
           document.body.insertAdjacentElement("beforeend", modalContainerEle);
 

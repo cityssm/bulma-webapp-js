@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     const navbarEle = document.getElementById("cityssm-theme--navbar");
     if (navbarEle) {
-        navbarEle.getElementsByClassName("navbar-burger")[0].addEventListener("click", (clickEvent) => {
+        navbarEle.querySelector(".navbar-burger").addEventListener("click", (clickEvent) => {
             clickEvent.currentTarget.classList.toggle("is-active");
-            navbarEle.getElementsByClassName("navbar-menu")[0].classList.toggle("is-active");
+            navbarEle.querySelector(".navbar-menu").classList.toggle("is-active");
         });
     }
 })();
@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         logoutButtonEle.addEventListener("click", (clickEvent) => {
             clickEvent.preventDefault();
             cityssm.confirmModal("Log Out?", "<p>Are you sure you want to log out?</p>", "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>", "warning", () => {
-                const urlPrefix = document.getElementsByTagName("main")[0].getAttribute("data-url-prefix");
+                const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix");
                 window.localStorage.clear();
                 window.location.href = urlPrefix + "/logout";
             });
@@ -59,9 +59,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
 })();
 (() => {
-    const keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
+    const keepAliveMillis = document.querySelector("main").getAttribute("data-session-keep-alive-millis");
     if (keepAliveMillis && keepAliveMillis !== "0") {
-        const urlPrefix = document.getElementsByTagName("main")[0].getAttribute("data-url-prefix");
+        const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix");
         const keepAliveFn = () => {
             cityssm.postJSON(urlPrefix + "/keepAlive", {
                 t: Date.now()

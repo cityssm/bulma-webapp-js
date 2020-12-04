@@ -13,10 +13,10 @@ declare const cityssm: cityssmGlobal;
   const navbarEle = document.getElementById("cityssm-theme--navbar");
 
   if (navbarEle) {
-    navbarEle.getElementsByClassName("navbar-burger")[0].addEventListener("click", (clickEvent) => {
+    navbarEle.querySelector(".navbar-burger").addEventListener("click", (clickEvent) => {
 
       (clickEvent.currentTarget as HTMLElement).classList.toggle("is-active");
-      navbarEle.getElementsByClassName("navbar-menu")[0].classList.toggle("is-active");
+      navbarEle.querySelector(".navbar-menu").classList.toggle("is-active");
     });
   }
 
@@ -44,7 +44,7 @@ declare const cityssm: cityssmGlobal;
         "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>",
         "warning",
         () => {
-          const urlPrefix = document.getElementsByTagName("main")[0].getAttribute("data-url-prefix");
+          const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix");
 
           window.localStorage.clear();
           window.location.href = urlPrefix + "/logout";
@@ -120,11 +120,11 @@ declare const cityssm: cityssmGlobal;
 
 (() => {
 
-  const keepAliveMillis = document.getElementsByTagName("main")[0].getAttribute("data-session-keep-alive-millis");
+  const keepAliveMillis = document.querySelector("main").getAttribute("data-session-keep-alive-millis");
 
   if (keepAliveMillis && keepAliveMillis !== "0") {
 
-    const urlPrefix = document.getElementsByTagName("main")[0].getAttribute("data-url-prefix");
+    const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix");
 
     const keepAliveFn = () => {
 

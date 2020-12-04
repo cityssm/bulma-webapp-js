@@ -64,28 +64,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const csrfTokenEle = document.querySelector("meta[name='csrf-token']");
     const csrfToken = (csrfTokenEle ? csrfTokenEle.getAttribute("content") : "");
     const cityssm = {
-        clearElement(ele) {
+        clearElement: (ele) => {
             while (ele.firstChild) {
                 ele.removeChild(ele.firstChild);
             }
         },
-        escapeHTML(str) {
+        escapeHTML: (str) => {
             return String(str)
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;");
         },
-        dateToString(dateObj) {
+        dateToString: (dateObj) => {
             return dateObj.getFullYear().toString() + "-" +
                 ("0" + (dateObj.getMonth() + 1).toString()).slice(-2) + "-" +
                 ("0" + (dateObj.getDate().toString())).slice(-2);
         },
-        dateStringToDate(dateString) {
+        dateStringToDate: (dateString) => {
             const datePieces = dateString.split("-");
             return new Date(parseInt(datePieces[0], 10), parseInt(datePieces[1], 10) - 1, parseInt(datePieces[2], 10), 0, 0, 0, 0);
         },
-        dateStringDifferenceInDays(fromDateString, toDateString) {
+        dateStringDifferenceInDays: (fromDateString, toDateString) => {
             const fromDate = cityssm.dateStringToDate(fromDateString);
             const toDate = cityssm.dateStringToDate(toDateString);
             return Math.round((toDate.getTime() - fromDate.getTime()) / (86400 * 1000.0));
@@ -93,7 +93,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         responseToJSON: (response) => __awaiter(void 0, void 0, void 0, function* () {
             return yield response.json();
         }),
-        postJSON(fetchUrl, formEleOrObj, responseFn) {
+        postJSON: (fetchUrl, formEleOrObj, responseFn) => {
             const fetchOptions = {
                 method: "POST",
                 credentials: "same-origin",
@@ -123,10 +123,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 cityssm.alertModal("Error", "Error communicating with the server.", "OK", "danger");
             });
         },
-        showModal(modalEle) {
+        showModal: (modalEle) => {
             modalEle.classList.add("is-active");
         },
-        hideModal(internalEle_or_internalEvent) {
+        hideModal: (internalEle_or_internalEvent) => {
             let internalEle = internalEle_or_internalEvent;
             if (internalEle instanceof Event) {
                 internalEle = internalEle_or_internalEvent.currentTarget;
@@ -135,10 +135,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             modalEle.classList.remove("is-active");
         },
         htmlModalFolder: "/html/",
-        openHtmlModal(htmlFileName, callbackFns) {
+        openHtmlModal: (htmlFileName, callbackFns) => {
             window.fetch(cityssm.htmlModalFolder + htmlFileName + ".html")
-                .then((response) => __awaiter(this, void 0, void 0, function* () { return yield response.text(); }))
-                .then((modalHTML) => __awaiter(this, void 0, void 0, function* () {
+                .then((response) => __awaiter(void 0, void 0, void 0, function* () { return yield response.text(); }))
+                .then((modalHTML) => __awaiter(void 0, void 0, void 0, function* () {
                 const modalContainerEle = document.createElement("div");
                 modalContainerEle.innerHTML = modalHTML;
                 const modalEle = modalContainerEle.getElementsByClassName("modal")[0];
@@ -176,22 +176,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 cityssm.alertModal("Error", "Error loading popup.", "OK", "danger");
             });
         },
-        enableNavBlocker() {
+        enableNavBlocker: () => {
             if (!isNavBlockerEnabled) {
                 window.addEventListener("beforeunload", navBlockerEventFn);
                 isNavBlockerEnabled = true;
             }
         },
-        disableNavBlocker() {
+        disableNavBlocker: () => {
             if (isNavBlockerEnabled) {
                 window.removeEventListener("beforeunload", navBlockerEventFn);
                 isNavBlockerEnabled = false;
             }
         },
-        isNavBlockerEnabled() {
+        isNavBlockerEnabled: () => {
             return isNavBlockerEnabled;
         },
-        confirmModal(titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) {
+        confirmModal: (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) => {
             confirmModalFn({
                 contextualColorName,
                 titleString,
@@ -200,7 +200,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 callbackFn
             });
         },
-        alertModal(titleString, bodyHTML, okButtonHTML, contextualColorName) {
+        alertModal: (titleString, bodyHTML, okButtonHTML, contextualColorName) => {
             confirmModalFn({
                 contextualColorName,
                 titleString,

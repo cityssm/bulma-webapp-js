@@ -1,8 +1,10 @@
+export declare type BulmaContextualColors = "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger";
+declare type ParsedJSON = {} | boolean | number | string;
 export interface cityssmGlobal {
     clearElement: (element: HTMLElement) => void;
     escapeHTML: (unescapedString: string) => string;
-    postJSON: (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: any) => void) => void;
-    responseToJSON: (response: Response) => Promise<any>;
+    postJSON: (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: ParsedJSON) => void) => void;
+    responseToJSON: (response: Response) => Promise<ParsedJSON>;
     showModal: (modalEle: HTMLElement) => void;
     hideModal: (internalElementOrEvent: HTMLElement | Event) => void;
     htmlModalFolder: string;
@@ -13,8 +15,8 @@ export interface cityssmGlobal {
         onhidden?: (modalEle: HTMLElement) => void;
         onremoved?: () => void;
     }) => void;
-    confirmModal: (titleString: string, bodyHTML: string, okButtonHTML: string, contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger", okButtonCallbackFn: () => void) => void;
-    alertModal: (titleString: string, bodyHTML: string, okButtonHTML: string, contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger") => void;
+    confirmModal: (titleString: string, bodyHTML: string, okButtonHTML: string, contextualColorName: BulmaContextualColors, okButtonCallbackFn: () => void) => void;
+    alertModal: (titleString: string, bodyHTML: string, okButtonHTML: string, contextualColorName: BulmaContextualColors) => void;
     dateToString: (dateObject: Date) => string;
     dateStringToDate: (dateString: string) => Date;
     dateStringDifferenceInDays: (toDateString: string, fromDateString: string) => number;
@@ -22,3 +24,4 @@ export interface cityssmGlobal {
     disableNavBlocker: () => void;
     isNavBlockerEnabled: () => boolean;
 }
+export {};

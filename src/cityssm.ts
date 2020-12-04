@@ -1,8 +1,8 @@
-import { cityssmGlobal } from "./types";
+import type { BulmaContextualColors, cityssmGlobal } from "./types";
 
 interface confirmModalFn_modalOptions {
 
-  contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger";
+  contextualColorName: BulmaContextualColors;
   titleString: string;
   bodyHTML: string;
 
@@ -10,7 +10,7 @@ interface confirmModalFn_modalOptions {
   cancelButtonHTML?: string;
 
   okButtonHTML: string;
-  callbackFn?: () => any;
+  callbackFn?: () => void;
 }
 
 
@@ -101,13 +101,13 @@ interface confirmModalFn_modalOptions {
 
     // HELPERS
 
-    clearElement(ele: HTMLElement) {
+    clearElement: (ele: HTMLElement) => {
       while (ele.firstChild) {
         ele.removeChild(ele.firstChild);
       }
     },
 
-    escapeHTML(str: string) {
+    escapeHTML: (str: string) => {
 
       return String(str)
         .replace(/&/g, "&amp;")
@@ -116,20 +116,20 @@ interface confirmModalFn_modalOptions {
         .replace(/"/g, "&quot;");
     },
 
-    dateToString(dateObj: Date) {
+    dateToString: (dateObj: Date) => {
 
       return dateObj.getFullYear().toString() + "-" +
         ("0" + (dateObj.getMonth() + 1).toString()).slice(-2) + "-" +
         ("0" + (dateObj.getDate().toString())).slice(-2);
     },
 
-    dateStringToDate(dateString: string) {
+    dateStringToDate: (dateString: string) => {
 
       const datePieces = dateString.split("-");
       return new Date(parseInt(datePieces[0], 10), parseInt(datePieces[1], 10) - 1, parseInt(datePieces[2], 10), 0, 0, 0, 0);
     },
 
-    dateStringDifferenceInDays(fromDateString: string, toDateString: string) {
+    dateStringDifferenceInDays: (fromDateString: string, toDateString: string) => {
 
       const fromDate = cityssm.dateStringToDate(fromDateString);
       const toDate = cityssm.dateStringToDate(toDateString);
@@ -143,7 +143,7 @@ interface confirmModalFn_modalOptions {
       return await response.json();
     },
 
-    postJSON(fetchUrl: string, formEleOrObj: HTMLFormElement | object, responseFn: (responseJSON: {}) => void) {
+    postJSON: (fetchUrl: string, formEleOrObj: HTMLFormElement | object, responseFn: (responseJSON: {}) => void) => {
 
       const fetchOptions: RequestInit = {
         method: "POST",
@@ -189,11 +189,11 @@ interface confirmModalFn_modalOptions {
     // MODAL TOGGLES
 
 
-    showModal(modalEle: HTMLElement) {
+    showModal: (modalEle: HTMLElement) => {
       modalEle.classList.add("is-active");
     },
 
-    hideModal(internalEle_or_internalEvent: HTMLElement | Event) {
+    hideModal: (internalEle_or_internalEvent: HTMLElement | Event) => {
 
       let internalEle = internalEle_or_internalEvent;
 
@@ -208,7 +208,7 @@ interface confirmModalFn_modalOptions {
 
     htmlModalFolder: "/html/",
 
-    openHtmlModal(
+    openHtmlModal: (
       htmlFileName: string,
       callbackFns: {
         onshow?: (modalEle: HTMLElement) => void;
@@ -217,7 +217,7 @@ interface confirmModalFn_modalOptions {
         onhidden?: (modalEle: HTMLElement) => void;
         onremoved?: () => void;
 
-      }) {
+      }) => {
 
       // eslint-disable-next-line capitalized-comments
       /*
@@ -309,21 +309,21 @@ interface confirmModalFn_modalOptions {
     // NAV BLOCKER
 
 
-    enableNavBlocker() {
+    enableNavBlocker: () => {
       if (!isNavBlockerEnabled) {
         window.addEventListener("beforeunload", navBlockerEventFn);
         isNavBlockerEnabled = true;
       }
     },
 
-    disableNavBlocker() {
+    disableNavBlocker: () => {
       if (isNavBlockerEnabled) {
         window.removeEventListener("beforeunload", navBlockerEventFn);
         isNavBlockerEnabled = false;
       }
     },
 
-    isNavBlockerEnabled() {
+    isNavBlockerEnabled: () => {
       return isNavBlockerEnabled;
     },
 
@@ -331,12 +331,12 @@ interface confirmModalFn_modalOptions {
     // ALERT / CONFIRM MODALS
 
 
-    confirmModal(
+    confirmModal: (
       titleString: string,
       bodyHTML: string,
       okButtonHTML: string,
       contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger",
-      callbackFn: () => void) {
+      callbackFn: () => void) => {
 
       confirmModalFn({
         contextualColorName,
@@ -347,11 +347,11 @@ interface confirmModalFn_modalOptions {
       });
     },
 
-    alertModal(
+    alertModal: (
       titleString: string,
       bodyHTML: string,
       okButtonHTML: string,
-      contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger") {
+      contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger") => {
 
       confirmModalFn({
         contextualColorName,

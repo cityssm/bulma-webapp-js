@@ -48,8 +48,7 @@ declare const cityssm: cityssmGlobal;
 
           window.localStorage.clear();
           window.location.href = urlPrefix + "/logout";
-        }
-      );
+        });
     });
   }
 })();

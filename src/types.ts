@@ -1,10 +1,15 @@
+export type BulmaContextualColors = "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger";
+
+type ParsedJSON = {} | boolean | number | string;
+
+
 export interface cityssmGlobal {
 
   clearElement: (element: HTMLElement) => void;
   escapeHTML: (unescapedString: string) => string;
 
-  postJSON: (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: any) => void) => void;
-  responseToJSON: (response: Response) => Promise<any>;
+  postJSON: (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: ParsedJSON) => void) => void;
+  responseToJSON: (response: Response) => Promise<ParsedJSON>;
 
   showModal: (modalEle: HTMLElement) => void;
   hideModal: (internalElementOrEvent: HTMLElement | Event) => void;
@@ -22,13 +27,13 @@ export interface cityssmGlobal {
   confirmModal: (titleString: string,
     bodyHTML: string,
     okButtonHTML: string,
-    contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger",
+    contextualColorName: BulmaContextualColors,
     okButtonCallbackFn: () => void) => void;
 
   alertModal: (titleString: string,
     bodyHTML: string,
     okButtonHTML: string,
-    contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger") => void;
+    contextualColorName: BulmaContextualColors) => void;
 
   dateToString: (dateObject: Date) => string;
   dateStringToDate: (dateString: string) => Date;

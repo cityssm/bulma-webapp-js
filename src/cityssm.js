@@ -95,11 +95,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }),
         postJSON: (fetchUrl, formEleOrObj, responseFn) => {
             const fetchOptions = {
-                method: "POST",
                 credentials: "same-origin",
                 headers: {
                     "CSRF-Token": csrfToken
-                }
+                },
+                method: "POST"
             };
             if (formEleOrObj) {
                 if (formEleOrObj instanceof HTMLFormElement) {
@@ -193,20 +193,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
         },
         confirmModal: (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) => {
             confirmModalFn({
-                contextualColorName,
-                titleString,
                 bodyHTML,
+                callbackFn,
+                contextualColorName,
                 okButtonHTML,
-                callbackFn
+                titleString
             });
         },
         alertModal: (titleString, bodyHTML, okButtonHTML, contextualColorName) => {
             confirmModalFn({
-                contextualColorName,
-                titleString,
                 bodyHTML,
+                contextualColorName,
                 hideCancelButton: true,
-                okButtonHTML
+                okButtonHTML,
+                titleString
             });
         }
     };

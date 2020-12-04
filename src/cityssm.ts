@@ -1,17 +1,4 @@
-import type { BulmaContextualColors, cityssmGlobal } from "./types";
-
-interface confirmModalFn_modalOptions {
-
-  contextualColorName: BulmaContextualColors;
-  titleString: string;
-  bodyHTML: string;
-
-  hideCancelButton?: boolean;
-  cancelButtonHTML?: string;
-
-  okButtonHTML: string;
-  callbackFn?: () => void;
-}
+import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
 
 (() => {
@@ -101,13 +88,13 @@ interface confirmModalFn_modalOptions {
 
     // HELPERS
 
-    clearElement: (ele: HTMLElement) => {
+    clearElement: (ele) => {
       while (ele.firstChild) {
         ele.removeChild(ele.firstChild);
       }
     },
 
-    escapeHTML: (str: string) => {
+    escapeHTML: (str) => {
 
       return String(str)
         .replace(/&/g, "&amp;")
@@ -116,20 +103,24 @@ interface confirmModalFn_modalOptions {
         .replace(/"/g, "&quot;");
     },
 
-    dateToString: (dateObj: Date) => {
+    dateToString: (dateObj) => {
 
       return dateObj.getFullYear().toString() + "-" +
         ("0" + (dateObj.getMonth() + 1).toString()).slice(-2) + "-" +
         ("0" + (dateObj.getDate().toString())).slice(-2);
     },
 
-    dateStringToDate: (dateString: string) => {
+    dateStringToDate: (dateString) => {
 
       const datePieces = dateString.split("-");
-      return new Date(parseInt(datePieces[0], 10), parseInt(datePieces[1], 10) - 1, parseInt(datePieces[2], 10), 0, 0, 0, 0);
+      return new Date(
+        parseInt(datePieces[0], 10),
+        parseInt(datePieces[1], 10) - 1,
+        parseInt(datePieces[2], 10),
+        0, 0, 0, 0);
     },
 
-    dateStringDifferenceInDays: (fromDateString: string, toDateString: string) => {
+    dateStringDifferenceInDays: (fromDateString, toDateString) => {
 
       const fromDate = cityssm.dateStringToDate(fromDateString);
       const toDate = cityssm.dateStringToDate(toDateString);
@@ -139,18 +130,18 @@ interface confirmModalFn_modalOptions {
 
     // FETCH HELPERS
 
-    responseToJSON: async(response: Response) => {
+    responseToJSON: async(response) => {
       return await response.json();
     },
 
-    postJSON: (fetchUrl: string, formEleOrObj: HTMLFormElement | object, responseFn: (responseJSON: {}) => void) => {
+    postJSON: (fetchUrl, formEleOrObj, responseFn) => {
 
       const fetchOptions: RequestInit = {
-        method: "POST",
         credentials: "same-origin",
         headers: {
           "CSRF-Token": csrfToken
-        }
+        },
+        method: "POST"
       };
 
 
@@ -189,11 +180,11 @@ interface confirmModalFn_modalOptions {
     // MODAL TOGGLES
 
 
-    showModal: (modalEle: HTMLElement) => {
+    showModal: (modalEle) => {
       modalEle.classList.add("is-active");
     },
 
-    hideModal: (internalEle_or_internalEvent: HTMLElement | Event) => {
+    hideModal: (internalEle_or_internalEvent) => {
 
       let internalEle = internalEle_or_internalEvent;
 
@@ -208,16 +199,7 @@ interface confirmModalFn_modalOptions {
 
     htmlModalFolder: "/html/",
 
-    openHtmlModal: (
-      htmlFileName: string,
-      callbackFns: {
-        onshow?: (modalEle: HTMLElement) => void;
-        onshown?: (modalEle: HTMLElement, closeModalFn: () => void) => void;
-        onhide?: (modalEle: HTMLElement) => boolean;
-        onhidden?: (modalEle: HTMLElement) => void;
-        onremoved?: () => void;
-
-      }) => {
+    openHtmlModal: (htmlFileName, callbackFns) => {
 
       // eslint-disable-next-line capitalized-comments
       /*
@@ -331,34 +313,25 @@ interface confirmModalFn_modalOptions {
     // ALERT / CONFIRM MODALS
 
 
-    confirmModal: (
-      titleString: string,
-      bodyHTML: string,
-      okButtonHTML: string,
-      contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger",
-      callbackFn: () => void) => {
+    confirmModal: (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) => {
 
       confirmModalFn({
-        contextualColorName,
-        titleString,
         bodyHTML,
+        callbackFn,
+        contextualColorName,
         okButtonHTML,
-        callbackFn
+        titleString
       });
     },
 
-    alertModal: (
-      titleString: string,
-      bodyHTML: string,
-      okButtonHTML: string,
-      contextualColorName: "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger") => {
+    alertModal: (titleString, bodyHTML, okButtonHTML, contextualColorName) => {
 
       confirmModalFn({
-        contextualColorName,
-        titleString,
         bodyHTML,
+        contextualColorName,
         hideCancelButton: true,
-        okButtonHTML
+        okButtonHTML,
+        titleString
       });
     }
   };

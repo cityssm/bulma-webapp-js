@@ -1,5 +1,14 @@
-export declare type BulmaContextualColors = "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger";
+declare type BulmaContextualColors = "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger";
 declare type ParsedJSON = {} | boolean | number | string;
+export interface confirmModalFn_modalOptions {
+    contextualColorName: BulmaContextualColors;
+    titleString: string;
+    bodyHTML: string;
+    hideCancelButton?: boolean;
+    cancelButtonHTML?: string;
+    okButtonHTML: string;
+    callbackFn?: () => void;
+}
 export interface cityssmGlobal {
     clearElement: (element: HTMLElement) => void;
     escapeHTML: (unescapedString: string) => string;

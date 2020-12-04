@@ -116,8 +116,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
       return new Date(
         parseInt(datePieces[0], 10),
         parseInt(datePieces[1], 10) - 1,
-        parseInt(datePieces[2], 10),
-        0, 0, 0, 0);
+        parseInt(datePieces[2], 10));
     },
 
     dateStringDifferenceInDays: (fromDateString, toDateString) => {

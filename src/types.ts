@@ -52,6 +52,7 @@ export interface cityssmGlobal {
     contextualColorName: BulmaContextualColors) => void;
 
   dateToString: (dateObject: Date) => string;
+  dateToTimeString: (dateObject: Date) => string;
   dateStringToDate: (dateString: string) => Date;
   dateStringDifferenceInDays: (toDateString: string, fromDateString: string) => number;
 

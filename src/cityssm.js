@@ -81,6 +81,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ("0" + (dateObj.getMonth() + 1).toString()).slice(-2) + "-" +
                 ("0" + (dateObj.getDate().toString())).slice(-2);
         },
+        dateToTimeString: (dateObj) => {
+            return ("00" + (dateObj.getHours().toString())).slice(-2) +
+                ":" +
+                ("00" + (dateObj.getMinutes().toString())).slice(-2);
+        },
         dateStringToDate: (dateString) => {
             const datePieces = dateString.split("-");
             return new Date(parseInt(datePieces[0], 10), parseInt(datePieces[1], 10) - 1, parseInt(datePieces[2], 10));

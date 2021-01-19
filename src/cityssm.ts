@@ -110,6 +110,12 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
         ("0" + (dateObj.getDate().toString())).slice(-2);
     },
 
+    dateToTimeString: (dateObj) => {
+      return ("00" + (dateObj.getHours().toString())).slice(-2) +
+        ":" +
+        ("00" + (dateObj.getMinutes().toString())).slice(-2);
+    },
+
     dateStringToDate: (dateString) => {
 
       const datePieces = dateString.split("-");

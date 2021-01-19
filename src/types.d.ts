@@ -27,6 +27,7 @@ export interface cityssmGlobal {
     confirmModal: (titleString: string, bodyHTML: string, okButtonHTML: string, contextualColorName: BulmaContextualColors, okButtonCallbackFn: () => void) => void;
     alertModal: (titleString: string, bodyHTML: string, okButtonHTML: string, contextualColorName: BulmaContextualColors) => void;
     dateToString: (dateObject: Date) => string;
+    dateToTimeString: (dateObject: Date) => string;
     dateStringToDate: (dateString: string) => Date;
     dateStringDifferenceInDays: (toDateString: string, fromDateString: string) => number;
     enableNavBlocker: () => void;

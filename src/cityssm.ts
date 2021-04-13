@@ -153,9 +153,27 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
       if (formEleOrObj) {
 
+        console.log(formEleOrObj);
+
         if (formEleOrObj instanceof HTMLFormElement) {
 
-          fetchOptions.body = new FormData(formEleOrObj);
+          const formEle = formEleOrObj;
+
+          if (formEle.querySelector("input[name][type='file']")) {
+
+            fetchOptions.body = new FormData(formEle);
+
+          } else {
+
+            const data = new URLSearchParams();
+
+            for (const pair of new FormData(formEle)) {
+              // eslint-disable-next-line @typescript-eslint/no-base-to-string
+              data.append(pair[0], pair[1].toString());
+            }
+
+            fetchOptions.body = data;
+          }
 
         } else if (formEleOrObj instanceof Object) {
 

@@ -108,13 +108,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             };
             if (formEleOrObj) {
                 if (formEleOrObj instanceof HTMLFormElement) {
-                    const formEle = formEleOrObj;
-                    if (formEle.querySelector("input[name][type='file']")) {
-                        fetchOptions.body = new FormData(formEle);
-                    }
-                    else {
-                        fetchOptions.body = new URLSearchParams(new FormData(formEle));
-                    }
+                    fetchOptions.body = new FormData(formEleOrObj);
                 }
                 else if (formEleOrObj instanceof Object) {
                     fetchOptions.headers["Content-Type"] = "application/json";

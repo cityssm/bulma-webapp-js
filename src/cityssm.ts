@@ -155,21 +155,11 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
         if (formEleOrObj instanceof HTMLFormElement) {
 
-          const formEle = formEleOrObj;
-
-          if (formEle.querySelector("input[name][type='file']")) {
-
-            fetchOptions.body = new FormData(formEle);
-
-          } else {
-            fetchOptions.body = new URLSearchParams(new FormData(formEle));
-          }
-
+          fetchOptions.body = new FormData(formEleOrObj);
 
         } else if (formEleOrObj instanceof Object) {
 
           fetchOptions.headers["Content-Type"] = "application/json";
-
           fetchOptions.body = JSON.stringify(formEleOrObj);
         }
       }

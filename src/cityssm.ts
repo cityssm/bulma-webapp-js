@@ -153,8 +153,6 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
       if (formEleOrObj) {
 
-        console.log(formEleOrObj);
-
         if (formEleOrObj instanceof HTMLFormElement) {
 
           const formEle = formEleOrObj;

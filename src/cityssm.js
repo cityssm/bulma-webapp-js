@@ -107,7 +107,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 method: "POST"
             };
             if (formEleOrObj) {
-                console.log(formEleOrObj);
                 if (formEleOrObj instanceof HTMLFormElement) {
                     const formEle = formEleOrObj;
                     if (formEle.querySelector("input[name][type='file']")) {

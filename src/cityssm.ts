@@ -290,8 +290,8 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
           const closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
 
-          for (const closeModalBtnEle of closeModalBtnEles) {
-            closeModalBtnEle.addEventListener("click", closeModalFn);
+          for (let index = 0; index < closeModalBtnEles.length; index += 1) {
+            closeModalBtnEles[index].addEventListener("click", closeModalFn);
           }
         })
         .catch(() => {

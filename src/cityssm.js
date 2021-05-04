@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
     var isNavBlockerEnabled = false;
     var navBlockerEventFn = function (e) {
@@ -160,7 +160,8 @@ exports.__esModule = true;
             }
             window.fetch(fetchUrl, fetchOptions)
                 .then(cityssm.responseToJSON)
-                .then(responseFn)["catch"](function () {
+                .then(responseFn)
+                .catch(function () {
                 cityssm.alertModal("Error", "Error communicating with the server.", "OK", "danger");
             });
         },
@@ -185,7 +186,7 @@ exports.__esModule = true;
                 }
             }); }); })
                 .then(function (modalHTML) { return __awaiter(void 0, void 0, void 0, function () {
-                var modalContainerEle, modalEle, closeModalFn, closeModalBtnEles, _i, closeModalBtnEles_1, closeModalBtnEle;
+                var modalContainerEle, modalEle, closeModalFn, closeModalBtnEles, index;
                 return __generator(this, function (_a) {
                     modalContainerEle = document.createElement("div");
                     modalContainerEle.innerHTML = modalHTML;
@@ -216,13 +217,13 @@ exports.__esModule = true;
                         callbackFns.onshown(modalEle, closeModalFn);
                     }
                     closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
-                    for (_i = 0, closeModalBtnEles_1 = closeModalBtnEles; _i < closeModalBtnEles_1.length; _i++) {
-                        closeModalBtnEle = closeModalBtnEles_1[_i];
-                        closeModalBtnEle.addEventListener("click", closeModalFn);
+                    for (index = 0; index < closeModalBtnEles.length; index += 1) {
+                        closeModalBtnEles[index].addEventListener("click", closeModalFn);
                     }
                     return [2];
                 });
-            }); })["catch"](function () {
+            }); })
+                .catch(function () {
                 cityssm.alertModal("Error", "Error loading popup.", "OK", "danger");
             });
         },

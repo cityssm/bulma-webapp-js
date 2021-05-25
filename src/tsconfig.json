@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "module": "CommonJS",
+    "target": "ES5",
+    "module": "None",
     "isolatedModules": false,
     "declaration": true,
     "noImplicitAny": false,

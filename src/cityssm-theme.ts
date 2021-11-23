@@ -4,26 +4,6 @@ declare const cityssm: cityssmGlobal;
 
 
 /*
-* NAVBAR TOGGLE
-*/
-
-
-(() => {
-
-  const navbarEle = document.getElementById("cityssm-theme--navbar");
-
-  if (navbarEle) {
-    navbarEle.querySelector(".navbar-burger").addEventListener("click", (clickEvent) => {
-
-      (clickEvent.currentTarget as HTMLElement).classList.toggle("is-active");
-      navbarEle.querySelector(".navbar-menu").classList.toggle("is-active");
-    });
-  }
-
-})();
-
-
-/*
  * LOGOUT MODAL
  */
 
@@ -44,7 +24,7 @@ declare const cityssm: cityssmGlobal;
         "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>",
         "warning",
         () => {
-          const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix");
+          const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix") || "";
 
           window.localStorage.clear();
           window.location.href = urlPrefix + "/logout";
@@ -124,7 +104,7 @@ declare const cityssm: cityssmGlobal;
 
   if (keepAliveMillis && keepAliveMillis !== "0") {
 
-    const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix");
+    const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix") || "";
 
     const keepAliveFn = () => {
 

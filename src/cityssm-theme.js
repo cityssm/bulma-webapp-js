@@ -1,21 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
-    var navbarEle = document.getElementById("cityssm-theme--navbar");
-    if (navbarEle) {
-        navbarEle.querySelector(".navbar-burger").addEventListener("click", function (clickEvent) {
-            clickEvent.currentTarget.classList.toggle("is-active");
-            navbarEle.querySelector(".navbar-menu").classList.toggle("is-active");
-        });
-    }
-})();
-(function () {
     var logoutButtonEle = document.getElementById("cityssm-theme--logout-button");
     if (logoutButtonEle) {
         logoutButtonEle.addEventListener("click", function (clickEvent) {
             clickEvent.preventDefault();
             cityssm.confirmModal("Log Out?", "<p>Are you sure you want to log out?</p>", "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>", "warning", function () {
-                var urlPrefix = document.querySelector("main").getAttribute("data-url-prefix");
+                var urlPrefix = document.querySelector("main").getAttribute("data-url-prefix") || "";
                 window.localStorage.clear();
                 window.location.href = urlPrefix + "/logout";
             });
@@ -61,7 +52,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
     var keepAliveMillis = document.querySelector("main").getAttribute("data-session-keep-alive-millis");
     if (keepAliveMillis && keepAliveMillis !== "0") {
-        var urlPrefix_1 = document.querySelector("main").getAttribute("data-url-prefix");
+        var urlPrefix_1 = document.querySelector("main").getAttribute("data-url-prefix") || "";
         var keepAliveFn = function () {
             cityssm.postJSON(urlPrefix_1 + "/keepAlive", {
                 t: Date.now()

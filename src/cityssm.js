@@ -167,7 +167,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     fetchOptions.body = JSON.stringify(formEleOrObj);
                 }
             }
-            console.log(fetchOptions.body);
             window.fetch(fetchUrl, fetchOptions)
                 .then(cityssm.responseToJSON)
                 .then(responseFn)

@@ -192,8 +192,6 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
         }
       }
 
-      console.log(fetchOptions.body);
-
       window.fetch(fetchUrl, fetchOptions)
         .then(cityssm.responseToJSON)
         .then(responseFn)

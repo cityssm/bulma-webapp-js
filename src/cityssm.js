@@ -145,12 +145,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         fetchOptions.body = new FormData(formEle);
                     }
                     else {
-                        var data = new URLSearchParams();
-                        for (var _i = 0, _a = new FormData(formEle); _i < _a.length; _i++) {
-                            var pair = _a[_i];
-                            data.append(pair[0], pair[1].toString());
-                        }
-                        fetchOptions.body = data;
+                        var formData = new FormData(formEle);
+                        var object_1 = {};
+                        formData.forEach(function (value, key) {
+                            if (!Reflect.has(object_1, key)) {
+                                object_1[key] = value;
+                                return;
+                            }
+                            if (!Array.isArray(object_1[key])) {
+                                object_1[key] = [object_1[key]];
+                            }
+                            object_1[key].push(value);
+                        });
+                        var json = JSON.stringify(object_1);
+                        fetchOptions.headers["Content-Type"] = "application/json";
+                        fetchOptions.body = json;
                     }
                 }
                 else if (formEleOrObj instanceof Object) {
@@ -158,6 +167,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     fetchOptions.body = JSON.stringify(formEleOrObj);
                 }
             }
+            console.log(fetchOptions.body);
             window.fetch(fetchUrl, fetchOptions)
                 .then(cityssm.responseToJSON)
                 .then(responseFn)

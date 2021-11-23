@@ -6,9 +6,18 @@ module.exports = {
     project: ["./tsconfig.json", "./src/tsconfig.json"]
   },
   plugins: [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "unicorn"
   ],
-  extends: "standard-with-typescript",
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:node/recommended",
+    "plugin:promise/recommended",
+    "plugin:unicorn/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   rules: {
     "arrow-parens": ["error", "always"],
     "no-multiple-empty-lines": ["error", {

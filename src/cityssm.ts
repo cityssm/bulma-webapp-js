@@ -136,7 +136,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
     // FETCH HELPERS
 
-    responseToJSON: async(response) => {
+    responseToJSON: async (response) => {
       return await response.json();
     },
 
@@ -163,14 +163,26 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
           } else {
 
-            const data = new URLSearchParams();
+            const formData = new FormData(formEle);
 
-            for (const pair of new FormData(formEle)) {
-              // eslint-disable-next-line @typescript-eslint/no-base-to-string
-              data.append(pair[0], pair[1].toString());
-            }
+            const object = {};
 
-            fetchOptions.body = data;
+            formData.forEach((value, key) => {
+              // Reflect.has in favor of: object.hasOwnProperty(key)
+              if (!Reflect.has(object, key)) {
+                object[key] = value;
+                return;
+              }
+              if (!Array.isArray(object[key])) {
+                object[key] = [object[key]];
+              }
+              object[key].push(value);
+            });
+
+            const json = JSON.stringify(object);
+
+            fetchOptions.headers["Content-Type"] = "application/json";
+            fetchOptions.body = json;
           }
 
         } else if (formEleOrObj instanceof Object) {
@@ -179,6 +191,8 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
           fetchOptions.body = JSON.stringify(formEleOrObj);
         }
       }
+
+      console.log(fetchOptions.body);
 
       window.fetch(fetchUrl, fetchOptions)
         .then(cityssm.responseToJSON)
@@ -230,8 +244,8 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
       */
 
       window.fetch(cityssm.htmlModalFolder + htmlFileName + ".html")
-        .then(async(response) => await response.text())
-        .then(async(modalHTML) => {
+        .then(async (response) => await response.text())
+        .then(async (modalHTML) => {
 
           // Append the modal to the end of the body
 
@@ -244,7 +258,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
           // Call onshow()
 
-          if (callbackFns?.onshow) {
+          if (callbackFns ?.onshow) {
 
             callbackFns.onshow(modalEle);
 
@@ -258,7 +272,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
             const modalWasShown = modalEle.classList.contains("is-active");
 
-            if (callbackFns?.onhide && modalWasShown) {
+            if (callbackFns ?.onhide && modalWasShown) {
 
               const doHide = callbackFns.onhide(modalEle);
 
@@ -269,20 +283,20 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
             modalEle.classList.remove("is-active");
 
-            if (callbackFns?.onhidden && modalWasShown) {
+            if (callbackFns ?.onhidden && modalWasShown) {
               callbackFns.onhidden(modalEle);
             }
 
             modalContainerEle.remove();
 
-            if (callbackFns?.onremoved) {
+            if (callbackFns ?.onremoved) {
               callbackFns.onremoved();
             }
           };
 
           // Call onshown()
 
-          if (callbackFns?.onshown) {
+          if (callbackFns ?.onshown) {
             callbackFns.onshown(modalEle, closeModalFn);
           }
 

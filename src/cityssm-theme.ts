@@ -10,7 +10,7 @@ declare const cityssm: cityssmGlobal;
 
 (() => {
 
-  const logoutButtonEle = document.getElementById("cityssm-theme--logout-button");
+  const logoutButtonEle = document.querySelector("#cityssm-theme--logout-button");
 
   if (logoutButtonEle) {
 
@@ -43,13 +43,13 @@ declare const cityssm: cityssmGlobal;
 
   const localStoragePropertyName = "collapseSidemenu";
 
-  const collapseButtonEle = document.getElementById("cityssm-theme--sidemenu-collapse-button");
-  const collapseSidemenuEle = document.getElementById("cityssm-theme--sidemenu-collapsed");
+  const collapseButtonEle = document.querySelector("#cityssm-theme--sidemenu-collapse-button") as HTMLButtonElement;
+  const collapseSidemenuEle = document.querySelector("#cityssm-theme--sidemenu-collapsed");
 
-  const expandButtonEle = document.getElementById("cityssm-theme--sidemenu-expand-button");
-  const expandSidemenuEle = document.getElementById("cityssm-theme--sidemenu-expanded");
+  const expandButtonEle = document.querySelector("#cityssm-theme--sidemenu-expand-button") as HTMLButtonElement;
+  const expandSidemenuEle = document.querySelector("#cityssm-theme--sidemenu-expanded");
 
-  const collapseFn = () => {
+  const collapseFunction = (clickEvent?: Event) => {
 
     expandSidemenuEle.classList.add("is-hidden");
     collapseSidemenuEle.classList.remove("is-hidden");
@@ -57,13 +57,16 @@ declare const cityssm: cityssmGlobal;
     try {
       window.localStorage.setItem(localStoragePropertyName, "true");
 
-    } catch (_e) {
+    } catch (_error) {
       // ignore
     }
 
+    if (clickEvent) {
+      expandButtonEle.focus();
+    }
   };
 
-  const expandFn = () => {
+  const expandFunction = () => {
 
     collapseSidemenuEle.classList.add("is-hidden");
     expandSidemenuEle.classList.remove("is-hidden");
@@ -71,22 +74,24 @@ declare const cityssm: cityssmGlobal;
     try {
       window.localStorage.removeItem(localStoragePropertyName);
 
-    } catch (_e) {
+    } catch (_error) {
       // Ignore
     }
+
+    collapseButtonEle.focus();
   };
 
   if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
 
-    collapseButtonEle.addEventListener("click", collapseFn);
-    expandButtonEle.addEventListener("click", expandFn);
+    collapseButtonEle.addEventListener("click", collapseFunction);
+    expandButtonEle.addEventListener("click", expandFunction);
 
     try {
       if (window.localStorage.getItem(localStoragePropertyName)) {
-        collapseFn();
+        collapseFunction();
       }
 
-    } catch (_e) {
+    } catch (_error) {
       // Ignore
     }
   }
@@ -106,7 +111,7 @@ declare const cityssm: cityssmGlobal;
 
     const urlPrefix = document.querySelector("main").getAttribute("data-url-prefix") || "";
 
-    const keepAliveFn = () => {
+    const keepAliveFunction = () => {
 
       cityssm.postJSON(urlPrefix + "/keepAlive", {
         t: Date.now()
@@ -114,6 +119,6 @@ declare const cityssm: cityssmGlobal;
         () => { });
     };
 
-    window.setInterval(keepAliveFn, parseInt(keepAliveMillis, 10));
+    window.setInterval(keepAliveFunction, Number.parseInt(keepAliveMillis, 10));
   }
 })();

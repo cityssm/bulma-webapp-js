@@ -38,62 +38,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 (function () {
     var isNavBlockerEnabled = false;
-    var navBlockerEventFn = function (e) {
+    var navBlockerEventFunction = function (event) {
         var confirmationMessage = "You have unsaved changes that may be lost.";
-        e.returnValue = confirmationMessage;
+        event.returnValue = confirmationMessage;
         return confirmationMessage;
-    };
-    var confirmModalFn = function (modalOptions) {
-        var modalEle = document.createElement("div");
-        modalEle.className = "modal is-active";
-        var contextualColorName = modalOptions.contextualColorName || "info";
-        var titleString = modalOptions.titleString || "";
-        var bodyHTML = modalOptions.bodyHTML || "";
-        var cancelButtonHTML = modalOptions.cancelButtonHTML || "Cancel";
-        var okButtonHTML = modalOptions.okButtonHTML || "OK";
-        modalEle.innerHTML = "<div class=\"modal-background\"></div>" +
-            "<div class=\"modal-content\">" +
-            "<div class=\"message is-" + contextualColorName + "\">" +
-            ("<header class=\"message-header\">" +
-                "<span class=\"is-size-5\"></span>" +
-                "</header>") +
-            ("<section class=\"message-body\">" +
-                (bodyHTML === "" ? "" : "<div class=\"mb-4\">" + bodyHTML + "</div>") +
-                ("<div class=\"buttons is-block has-text-right\">" +
-                    (modalOptions.hideCancelButton
-                        ? ""
-                        : "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
-                            cancelButtonHTML +
-                            "</button>") +
-                    ("<button class=\"button is-ok-button is-" + contextualColorName + "\" type=\"button\" aria-label=\"OK\">" +
-                        okButtonHTML +
-                        "</button>") +
-                    "</div>") +
-                "</section>") +
-            "</div>" +
-            "</div>";
-        modalEle.querySelector(".message-header").querySelector("span").innerText = titleString;
-        if (!modalOptions.hideCancelButton) {
-            modalEle.querySelector(".is-cancel-button").addEventListener("click", function () {
-                modalEle.remove();
-            });
-        }
-        var okButtonEle = modalEle.querySelector(".is-ok-button");
-        okButtonEle.addEventListener("click", function () {
-            modalEle.remove();
-            if (modalOptions.callbackFn) {
-                modalOptions.callbackFn();
-            }
-        });
-        document.body.insertAdjacentElement("beforeend", modalEle);
-        okButtonEle.focus();
     };
     var csrfTokenEle = document.querySelector("meta[name='csrf-token']");
     var csrfToken = (csrfTokenEle ? csrfTokenEle.getAttribute("content") : "");
     var cityssm = {
         clearElement: function (ele) {
             while (ele.firstChild) {
-                ele.removeChild(ele.firstChild);
+                ele.firstChild.remove();
             }
         },
         escapeHTML: function (str) {
@@ -103,24 +58,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;");
         },
-        dateToString: function (dateObj) {
-            return dateObj.getFullYear().toString() + "-" +
-                ("0" + (dateObj.getMonth() + 1).toString()).slice(-2) + "-" +
-                ("0" + (dateObj.getDate().toString())).slice(-2);
+        dateToString: function (dateObject) {
+            return dateObject.getFullYear().toString() + "-" +
+                ("0" + (dateObject.getMonth() + 1).toString()).slice(-2) + "-" +
+                ("0" + (dateObject.getDate().toString())).slice(-2);
         },
-        dateToTimeString: function (dateObj) {
-            return ("00" + (dateObj.getHours().toString())).slice(-2) +
+        dateToTimeString: function (dateObject) {
+            return ("00" + (dateObject.getHours().toString())).slice(-2) +
                 ":" +
-                ("00" + (dateObj.getMinutes().toString())).slice(-2);
+                ("00" + (dateObject.getMinutes().toString())).slice(-2);
         },
         dateStringToDate: function (dateString) {
             var datePieces = dateString.split("-");
-            return new Date(parseInt(datePieces[0], 10), parseInt(datePieces[1], 10) - 1, parseInt(datePieces[2], 10));
+            return new Date(Number.parseInt(datePieces[0], 10), Number.parseInt(datePieces[1], 10) - 1, Number.parseInt(datePieces[2], 10));
         },
         dateStringDifferenceInDays: function (fromDateString, toDateString) {
             var fromDate = cityssm.dateStringToDate(fromDateString);
             var toDate = cityssm.dateStringToDate(toDateString);
-            return Math.round((toDate.getTime() - fromDate.getTime()) / (86400 * 1000.0));
+            return Math.round((toDate.getTime() - fromDate.getTime()) / (86400 * 1000));
         },
         responseToJSON: function (response) { return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -130,7 +85,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             });
         }); },
-        postJSON: function (fetchUrl, formEleOrObj, responseFn) {
+        postJSON: function (fetchUrl, formEleOrObj, responseFunction) {
             var fetchOptions = {
                 credentials: "same-origin",
                 headers: {
@@ -169,7 +124,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             window.fetch(fetchUrl, fetchOptions)
                 .then(cityssm.responseToJSON)
-                .then(responseFn)
+                .then(responseFunction)
                 .catch(function () {
                 cityssm.alertModal("Error", "Error communicating with the server.", "OK", "danger");
             });
@@ -195,7 +150,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             }); }); })
                 .then(function (modalHTML) { return __awaiter(void 0, void 0, void 0, function () {
-                var modalContainerEle, modalEle, closeModalFn, closeModalBtnEles, index;
+                var modalContainerEle, modalEle, closeModalFunction, closeModalButtonEles, _i, closeModalButtonEles_1, closeModalButtonEle;
                 return __generator(this, function (_a) {
                     modalContainerEle = document.createElement("div");
                     modalContainerEle.innerHTML = modalHTML;
@@ -205,7 +160,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         callbackFns.onshow(modalEle);
                     }
                     modalEle.classList.add("is-active");
-                    closeModalFn = function () {
+                    closeModalFunction = function () {
                         var modalWasShown = modalEle.classList.contains("is-active");
                         if ((callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onhide) && modalWasShown) {
                             var doHide = callbackFns.onhide(modalEle);
@@ -223,11 +178,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         }
                     };
                     if (callbackFns === null || callbackFns === void 0 ? void 0 : callbackFns.onshown) {
-                        callbackFns.onshown(modalEle, closeModalFn);
+                        callbackFns.onshown(modalEle, closeModalFunction);
                     }
-                    closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
-                    for (index = 0; index < closeModalBtnEles.length; index += 1) {
-                        closeModalBtnEles[index].addEventListener("click", closeModalFn);
+                    closeModalButtonEles = modalEle.querySelectorAll(".is-close-modal-button");
+                    for (_i = 0, closeModalButtonEles_1 = closeModalButtonEles; _i < closeModalButtonEles_1.length; _i++) {
+                        closeModalButtonEle = closeModalButtonEles_1[_i];
+                        closeModalButtonEle.addEventListener("click", closeModalFunction);
                     }
                     return [2];
                 });
@@ -238,35 +194,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
         },
         enableNavBlocker: function () {
             if (!isNavBlockerEnabled) {
-                window.addEventListener("beforeunload", navBlockerEventFn);
+                window.addEventListener("beforeunload", navBlockerEventFunction);
                 isNavBlockerEnabled = true;
             }
         },
         disableNavBlocker: function () {
             if (isNavBlockerEnabled) {
-                window.removeEventListener("beforeunload", navBlockerEventFn);
+                window.removeEventListener("beforeunload", navBlockerEventFunction);
                 isNavBlockerEnabled = false;
             }
         },
         isNavBlockerEnabled: function () {
             return isNavBlockerEnabled;
         },
-        confirmModal: function (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) {
-            confirmModalFn({
-                bodyHTML: bodyHTML,
-                callbackFn: callbackFn,
+        confirmModal: function (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFunction, cancelCallbackFunction) {
+            bulmaJS.confirm({
+                title: titleString,
+                message: bodyHTML,
+                messageIsHtml: true,
                 contextualColorName: contextualColorName,
-                okButtonHTML: okButtonHTML,
-                titleString: titleString
+                okButton: {
+                    text: okButtonHTML,
+                    textIsHtml: true,
+                    callbackFunction: callbackFunction
+                }
             });
         },
         alertModal: function (titleString, bodyHTML, okButtonHTML, contextualColorName) {
-            confirmModalFn({
-                bodyHTML: bodyHTML,
+            bulmaJS.alert({
+                title: titleString,
+                message: bodyHTML,
+                messageIsHtml: true,
                 contextualColorName: contextualColorName,
-                hideCancelButton: true,
-                okButtonHTML: okButtonHTML,
-                titleString: titleString
+                okButton: {
+                    text: okButtonHTML,
+                    textIsHtml: true
+                }
             });
         }
     };

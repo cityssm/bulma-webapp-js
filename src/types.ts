@@ -1,6 +1,8 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
+
 type BulmaContextualColors = "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger";
 
-type ParsedJSON = {} | boolean | number | string;
+type ParsedJSON = Record<string, unknown> | boolean | number | string;
 
 
 export interface confirmModalFn_modalOptions {
@@ -11,6 +13,7 @@ export interface confirmModalFn_modalOptions {
 
   hideCancelButton?: boolean;
   cancelButtonHTML?: string;
+  cancelCallbackFn?: () => void;
 
   okButtonHTML: string;
   callbackFn?: () => void;
@@ -23,7 +26,7 @@ export interface cityssmGlobal {
   escapeHTML: (unescapedString: string) => string;
 
   postJSON:
-  (fetchUrl: string, formEleOrObject: {} | HTMLFormElement, responseFn: (responseJSON: ParsedJSON) => void) => void;
+  (fetchUrl: string, formEleOrObject: unknown | HTMLFormElement, responseFunction: (responseJSON: ParsedJSON) => void) => void;
 
   responseToJSON: (response: Response) => Promise<ParsedJSON>;
 
@@ -34,7 +37,7 @@ export interface cityssmGlobal {
 
   openHtmlModal: (htmlFileName: string, callbackFns: {
     onshow?: (modalEle: HTMLElement) => void;
-    onshown?: (modalEle: HTMLElement, closeModalFn: () => void) => void;
+    onshown?: (modalEle: HTMLElement, closeModalFunction: () => void) => void;
     onhide?: (modalEle: HTMLElement) => boolean;
     onhidden?: (modalEle: HTMLElement) => void;
     onremoved?: () => void;
@@ -44,7 +47,8 @@ export interface cityssmGlobal {
     bodyHTML: string,
     okButtonHTML: string,
     contextualColorName: BulmaContextualColors,
-    okButtonCallbackFn: () => void) => void;
+    okButtonCallbackFunction: () => void,
+    cancelButtonCallbackFunction?: () => void) => void;
 
   alertModal: (titleString: string,
     bodyHTML: string,

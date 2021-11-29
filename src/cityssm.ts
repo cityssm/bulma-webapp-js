@@ -1,5 +1,9 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
+
+import type { BulmaJS } from "@cityssm/bulma-js/types";
 import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
+declare const bulmaJS: BulmaJS;
 
 (() => {
 
@@ -7,76 +11,11 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
   let isNavBlockerEnabled = false;
 
-  const navBlockerEventFn = (e: BeforeUnloadEvent) => {
+  const navBlockerEventFunction = (event: BeforeUnloadEvent) => {
 
     const confirmationMessage = "You have unsaved changes that may be lost.";
-    e.returnValue = confirmationMessage;
+    event.returnValue = confirmationMessage;
     return confirmationMessage;
-  };
-
-  // ALERT / CONFIRM MODALS
-
-  const confirmModalFn = (modalOptions: confirmModalFn_modalOptions) => {
-
-    const modalEle = document.createElement("div");
-    modalEle.className = "modal is-active";
-
-    const contextualColorName = modalOptions.contextualColorName || "info";
-
-    const titleString = modalOptions.titleString || "";
-    const bodyHTML = modalOptions.bodyHTML || "";
-
-    const cancelButtonHTML = modalOptions.cancelButtonHTML || "Cancel";
-    const okButtonHTML = modalOptions.okButtonHTML || "OK";
-
-    modalEle.innerHTML = "<div class=\"modal-background\"></div>" +
-      "<div class=\"modal-content\">" +
-      "<div class=\"message is-" + contextualColorName + "\">" +
-
-      ("<header class=\"message-header\">" +
-        "<span class=\"is-size-5\"></span>" +
-        "</header>") +
-
-      ("<section class=\"message-body\">" +
-        (bodyHTML === "" ? "" : "<div class=\"mb-4\">" + bodyHTML + "</div>") +
-
-        ("<div class=\"buttons is-block has-text-right\">" +
-          (modalOptions.hideCancelButton
-            ? ""
-            : "<button class=\"button is-cancel-button\" type=\"button\" aria-label=\"Cancel\">" +
-            cancelButtonHTML +
-            "</button>") +
-          ("<button class=\"button is-ok-button is-" + contextualColorName + "\" type=\"button\" aria-label=\"OK\">" +
-            okButtonHTML +
-            "</button>") +
-          "</div>") +
-
-        "</section>") +
-
-      "</div>" +
-      "</div>";
-
-    modalEle.querySelector(".message-header").querySelector("span").innerText = titleString;
-
-    if (!modalOptions.hideCancelButton) {
-
-      modalEle.querySelector(".is-cancel-button").addEventListener("click", () => {
-        modalEle.remove();
-      });
-    }
-
-    const okButtonEle = modalEle.querySelector(".is-ok-button");
-    okButtonEle.addEventListener("click", () => {
-
-      modalEle.remove();
-      if (modalOptions.callbackFn) {
-        modalOptions.callbackFn();
-      }
-    });
-
-    document.body.insertAdjacentElement("beforeend", modalEle);
-
-    (okButtonEle as HTMLElement).focus();
   };
 
 
@@ -90,7 +29,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
     clearElement: (ele) => {
       while (ele.firstChild) {
-        ele.removeChild(ele.firstChild);
+        ele.firstChild.remove();
       }
     },
 
@@ -103,17 +42,17 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
         .replace(/"/g, "&quot;");
     },
 
-    dateToString: (dateObj) => {
+    dateToString: (dateObject) => {
 
-      return dateObj.getFullYear().toString() + "-" +
-        ("0" + (dateObj.getMonth() + 1).toString()).slice(-2) + "-" +
-        ("0" + (dateObj.getDate().toString())).slice(-2);
+      return dateObject.getFullYear().toString() + "-" +
+        ("0" + (dateObject.getMonth() + 1).toString()).slice(-2) + "-" +
+        ("0" + (dateObject.getDate().toString())).slice(-2);
     },
 
-    dateToTimeString: (dateObj) => {
-      return ("00" + (dateObj.getHours().toString())).slice(-2) +
+    dateToTimeString: (dateObject) => {
+      return ("00" + (dateObject.getHours().toString())).slice(-2) +
         ":" +
-        ("00" + (dateObj.getMinutes().toString())).slice(-2);
+        ("00" + (dateObject.getMinutes().toString())).slice(-2);
     },
 
     dateStringToDate: (dateString) => {
@@ -121,9 +60,9 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
       const datePieces = dateString.split("-");
 
       return new Date(
-        parseInt(datePieces[0], 10),
-        parseInt(datePieces[1], 10) - 1,
-        parseInt(datePieces[2], 10));
+        Number.parseInt(datePieces[0], 10),
+        Number.parseInt(datePieces[1], 10) - 1,
+        Number.parseInt(datePieces[2], 10));
     },
 
     dateStringDifferenceInDays: (fromDateString, toDateString) => {
@@ -131,16 +70,16 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
       const fromDate = cityssm.dateStringToDate(fromDateString);
       const toDate = cityssm.dateStringToDate(toDateString);
 
-      return Math.round((toDate.getTime() - fromDate.getTime()) / (86400 * 1000.0));
+      return Math.round((toDate.getTime() - fromDate.getTime()) / (86_400 * 1000));
     },
 
     // FETCH HELPERS
 
-    responseToJSON: async (response) => {
+    responseToJSON: async(response) => {
       return await response.json();
     },
 
-    postJSON: (fetchUrl, formEleOrObj, responseFn) => {
+    postJSON: (fetchUrl, formEleOrObj, responseFunction) => {
 
       const fetchOptions: RequestInit = {
         credentials: "same-origin",
@@ -194,7 +133,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
       window.fetch(fetchUrl, fetchOptions)
         .then(cityssm.responseToJSON)
-        .then(responseFn)
+        .then(responseFunction)
         .catch(() => {
           cityssm.alertModal("Error", "Error communicating with the server.", "OK", "danger");
         });
@@ -242,8 +181,8 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
       */
 
       window.fetch(cityssm.htmlModalFolder + htmlFileName + ".html")
-        .then(async (response) => await response.text())
-        .then(async (modalHTML) => {
+        .then(async(response) => await response.text())
+        .then(async(modalHTML) => {
 
           // Append the modal to the end of the body
 
@@ -266,7 +205,7 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
           modalEle.classList.add("is-active");
 
-          const closeModalFn = () => {
+          const closeModalFunction = () => {
 
             const modalWasShown = modalEle.classList.contains("is-active");
 
@@ -295,15 +234,15 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
           // Call onshown()
 
           if (callbackFns ?.onshown) {
-            callbackFns.onshown(modalEle, closeModalFn);
+            callbackFns.onshown(modalEle, closeModalFunction);
           }
 
           // Set up close buttons
 
-          const closeModalBtnEles = modalEle.getElementsByClassName("is-close-modal-button");
+          const closeModalButtonEles = modalEle.querySelectorAll(".is-close-modal-button") as NodeListOf<HTMLButtonElement>;
 
-          for (let index = 0; index < closeModalBtnEles.length; index += 1) {
-            closeModalBtnEles[index].addEventListener("click", closeModalFn);
+          for (const closeModalButtonEle of closeModalButtonEles) {
+            closeModalButtonEle.addEventListener("click", closeModalFunction);
           }
         })
         .catch(() => {
@@ -317,14 +256,14 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
 
     enableNavBlocker: () => {
       if (!isNavBlockerEnabled) {
-        window.addEventListener("beforeunload", navBlockerEventFn);
+        window.addEventListener("beforeunload", navBlockerEventFunction);
         isNavBlockerEnabled = true;
       }
     },
 
     disableNavBlocker: () => {
       if (isNavBlockerEnabled) {
-        window.removeEventListener("beforeunload", navBlockerEventFn);
+        window.removeEventListener("beforeunload", navBlockerEventFunction);
         isNavBlockerEnabled = false;
       }
     },
@@ -337,25 +276,33 @@ import type { confirmModalFn_modalOptions, cityssmGlobal } from "./types";
     // ALERT / CONFIRM MODALS
 
 
-    confirmModal: (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFn) => {
+    confirmModal: (titleString, bodyHTML, okButtonHTML, contextualColorName, callbackFunction, cancelCallbackFunction?) => {
 
-      confirmModalFn({
-        bodyHTML,
-        callbackFn,
+      bulmaJS.confirm({
+        title: titleString,
+        message: bodyHTML,
+        messageIsHtml: true,
         contextualColorName,
-        okButtonHTML,
-        titleString
+        okButton: {
+          text: okButtonHTML,
+          textIsHtml: true,
+          callbackFunction
+        }
       });
+
     },
 
     alertModal: (titleString, bodyHTML, okButtonHTML, contextualColorName) => {
 
-      confirmModalFn({
-        bodyHTML,
+      bulmaJS.alert({
+        title: titleString,
+        message: bodyHTML,
+        messageIsHtml: true,
         contextualColorName,
-        hideCancelButton: true,
-        okButtonHTML,
-        titleString
+        okButton: {
+          text: okButtonHTML,
+          textIsHtml: true
+        }
       });
     }
   };

@@ -5,21 +5,6 @@ type BulmaContextualColors = "dark" | "primary" | "link" | "info" | "success" | 
 type ParsedJSON = Record<string, unknown> | boolean | number | string;
 
 
-export interface confirmModalFn_modalOptions {
-
-  contextualColorName: BulmaContextualColors;
-  titleString: string;
-  bodyHTML: string;
-
-  hideCancelButton?: boolean;
-  cancelButtonHTML?: string;
-  cancelCallbackFn?: () => void;
-
-  okButtonHTML: string;
-  callbackFn?: () => void;
-}
-
-
 export interface cityssmGlobal {
 
   clearElement: (element: HTMLElement) => void;
@@ -42,18 +27,6 @@ export interface cityssmGlobal {
     onhidden?: (modalEle: HTMLElement) => void;
     onremoved?: () => void;
   }) => void;
-
-  confirmModal: (titleString: string,
-    bodyHTML: string,
-    okButtonHTML: string,
-    contextualColorName: BulmaContextualColors,
-    okButtonCallbackFunction: () => void,
-    cancelButtonCallbackFunction?: () => void) => void;
-
-  alertModal: (titleString: string,
-    bodyHTML: string,
-    okButtonHTML: string,
-    contextualColorName: BulmaContextualColors) => void;
 
   dateToString: (dateObject: Date) => string;
   dateToTimeString: (dateObject: Date) => string;

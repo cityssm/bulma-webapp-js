@@ -1,18 +1,27 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const gulp = require("gulp");
-const minify = require("gulp-minify");
-const jsMinFn = () => {
-    return gulp.src("src/*.js", { allowEmpty: true })
-        .pipe(minify({ noSource: true, ext: { min: ".min.js" } }))
-        .pipe(gulp.dest("dist"));
-};
-gulp.task("javascript-min", jsMinFn);
-const watchFn = () => {
-    gulp.watch("src/*.js", jsMinFn);
-};
-gulp.task("watch", watchFn);
-gulp.task("default", () => {
-    jsMinFn();
-    watchFn();
+import gulp from 'gulp';
+import replace from 'gulp-replace';
+/*
+ * Remove "export" from src Javascript
+ */
+function sourceCleanFunction() {
+    return gulp
+        .src('src/*.js', { allowEmpty: true })
+        .pipe(replace('export {};', ''))
+        .pipe(replace('Object.defineProperty(exports, "__esModule", { value: true });', ''))
+        .pipe(gulp.dest('dist'));
+}
+gulp.task('source-clean', sourceCleanFunction);
+/*
+ * Watch
+ */
+function watchFunction() {
+    gulp.watch('src/*.js', sourceCleanFunction);
+}
+gulp.task('watch', watchFunction);
+/*
+ * Initialize default
+ */
+gulp.task('default', () => {
+    sourceCleanFunction();
+    watchFunction();
 });

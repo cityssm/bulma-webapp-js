@@ -1,29 +1,38 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-(function () {
-    var logoutButtonEle = document.querySelector("#cityssm-theme--logout-button");
+(() => {
+    const logoutButtonEle = document.querySelector('#cityssm-theme--logout-button');
     if (logoutButtonEle) {
-        logoutButtonEle.addEventListener("click", function (clickEvent) {
+        logoutButtonEle.addEventListener('click', (clickEvent) => {
             clickEvent.preventDefault();
-            cityssm.confirmModal("Log Out?", "<p>Are you sure you want to log out?</p>", "<span class=\"icon\"><i class=\"fas fa-sign-out-alt\" aria-hidden=\"true\"></i></span><span>Log Out</span>", "warning", function () {
-                var urlPrefix = document.querySelector("main").getAttribute("data-url-prefix") || "";
-                window.localStorage.clear();
-                window.location.href = urlPrefix + "/logout";
+            bulmaJS.confirm({
+                contextualColorName: 'warning',
+                title: 'Log Out?',
+                message: 'Are you sure you want to log out?',
+                okButton: {
+                    text: 'Log Out',
+                    callbackFunction: () => {
+                        const urlPrefix = document.querySelector('main').getAttribute('data-url-prefix') ||
+                            '';
+                        window.localStorage.clear();
+                        window.location.href = urlPrefix + '/logout';
+                    }
+                }
             });
         });
     }
 })();
-(function () {
-    var localStoragePropertyName = "collapseSidemenu";
-    var collapseButtonEle = document.querySelector("#cityssm-theme--sidemenu-collapse-button");
-    var collapseSidemenuEle = document.querySelector("#cityssm-theme--sidemenu-collapsed");
-    var expandButtonEle = document.querySelector("#cityssm-theme--sidemenu-expand-button");
-    var expandSidemenuEle = document.querySelector("#cityssm-theme--sidemenu-expanded");
-    var collapseFunction = function (clickEvent) {
-        expandSidemenuEle.classList.add("is-hidden");
-        collapseSidemenuEle.classList.remove("is-hidden");
+(() => {
+    const localStoragePropertyName = 'collapseSidemenu';
+    const collapseButtonEle = document.querySelector('#cityssm-theme--sidemenu-collapse-button');
+    const collapseSidemenuEle = document.querySelector('#cityssm-theme--sidemenu-collapsed');
+    const expandButtonEle = document.querySelector('#cityssm-theme--sidemenu-expand-button');
+    const expandSidemenuEle = document.querySelector('#cityssm-theme--sidemenu-expanded');
+    const collapseFunction = (clickEvent) => {
+        expandSidemenuEle.classList.add('is-hidden');
+        collapseSidemenuEle.classList.remove('is-hidden');
         try {
-            window.localStorage.setItem(localStoragePropertyName, "true");
+            window.localStorage.setItem(localStoragePropertyName, 'true');
         }
         catch (_error) {
         }
@@ -31,9 +40,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             expandButtonEle.focus();
         }
     };
-    var expandFunction = function () {
-        collapseSidemenuEle.classList.add("is-hidden");
-        expandSidemenuEle.classList.remove("is-hidden");
+    const expandFunction = () => {
+        collapseSidemenuEle.classList.add('is-hidden');
+        expandSidemenuEle.classList.remove('is-hidden');
         try {
             window.localStorage.removeItem(localStoragePropertyName);
         }
@@ -41,9 +50,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         collapseButtonEle.focus();
     };
-    if (collapseButtonEle && collapseSidemenuEle && expandButtonEle && expandSidemenuEle) {
-        collapseButtonEle.addEventListener("click", collapseFunction);
-        expandButtonEle.addEventListener("click", expandFunction);
+    if (collapseButtonEle &&
+        collapseSidemenuEle &&
+        expandButtonEle &&
+        expandSidemenuEle) {
+        collapseButtonEle.addEventListener('click', collapseFunction);
+        expandButtonEle.addEventListener('click', expandFunction);
         try {
             if (window.localStorage.getItem(localStoragePropertyName)) {
                 collapseFunction();
@@ -53,14 +65,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
 })();
-(function () {
-    var keepAliveMillis = document.querySelector("main").getAttribute("data-session-keep-alive-millis");
-    if (keepAliveMillis && keepAliveMillis !== "0") {
-        var urlPrefix_1 = document.querySelector("main").getAttribute("data-url-prefix") || "";
-        var keepAliveFunction = function () {
-            cityssm.postJSON(urlPrefix_1 + "/keepAlive", {
+(() => {
+    const keepAliveMillis = document
+        .querySelector('main')
+        .getAttribute('data-session-keep-alive-millis');
+    if (keepAliveMillis && keepAliveMillis !== '0') {
+        const urlPrefix = document.querySelector('main').getAttribute('data-url-prefix') || '';
+        const keepAliveFunction = () => {
+            cityssm.postJSON(urlPrefix + '/keepAlive', {
                 t: Date.now()
-            }, function () { });
+            }, () => { });
         };
         window.setInterval(keepAliveFunction, Number.parseInt(keepAliveMillis, 10));
     }

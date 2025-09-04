@@ -1,11 +1,9 @@
 .github
 
-.atomignore
-.codeclimate.yml
-.eslintignore
-.eslintrc.js
 .gitignore
 .npmignore
-.snyk
+
+eslint.config.*
 gulpfile.*
+prettier.config.*
 tsconfig.json

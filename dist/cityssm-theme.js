@@ -1,5 +1,3 @@
-"use strict";
-
 (() => {
     const logoutButtonEle = document.querySelector('#cityssm-theme--logout-button');
     if (logoutButtonEle) {
@@ -12,7 +10,7 @@
                 okButton: {
                     text: 'Log Out',
                     callbackFunction: () => {
-                        const urlPrefix = document.querySelector('main').getAttribute('data-url-prefix') ||
+                        const urlPrefix = document.querySelector('main')?.getAttribute('data-url-prefix') ??
                             '';
                         window.localStorage.clear();
                         window.location.href = urlPrefix + '/logout';
@@ -29,8 +27,8 @@
     const expandButtonEle = document.querySelector('#cityssm-theme--sidemenu-expand-button');
     const expandSidemenuEle = document.querySelector('#cityssm-theme--sidemenu-expanded');
     const collapseFunction = (clickEvent) => {
-        expandSidemenuEle.classList.add('is-hidden');
-        collapseSidemenuEle.classList.remove('is-hidden');
+        expandSidemenuEle?.classList.add('is-hidden');
+        collapseSidemenuEle?.classList.remove('is-hidden');
         try {
             window.localStorage.setItem(localStoragePropertyName, 'true');
         }
@@ -41,8 +39,8 @@
         }
     };
     const expandFunction = () => {
-        collapseSidemenuEle.classList.add('is-hidden');
-        expandSidemenuEle.classList.remove('is-hidden');
+        collapseSidemenuEle?.classList.add('is-hidden');
+        expandSidemenuEle?.classList.remove('is-hidden');
         try {
             window.localStorage.removeItem(localStoragePropertyName);
         }
@@ -68,9 +66,9 @@
 (() => {
     const keepAliveMillis = document
         .querySelector('main')
-        .getAttribute('data-session-keep-alive-millis');
+        ?.getAttribute('data-session-keep-alive-millis');
     if (keepAliveMillis && keepAliveMillis !== '0') {
-        const urlPrefix = document.querySelector('main').getAttribute('data-url-prefix') || '';
+        const urlPrefix = document.querySelector('main')?.getAttribute('data-url-prefix') ?? '';
         const keepAliveFunction = () => {
             cityssm.postJSON(urlPrefix + '/keepAlive', {
                 t: Date.now()

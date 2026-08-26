@@ -1,40 +1,39 @@
+/* eslint-disable unicorn/filename-case */
+
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 
-import type { cityssmGlobal } from './types.js'
+import type { CityssmGlobal } from './types.js'
 
 declare const bulmaJS: BulmaJS
-declare const cityssm: cityssmGlobal
+declare const cityssm: CityssmGlobal
 
-  /*
-   * LOGOUT MODAL
-   */
-;(() => {
-  const logoutButtonEle = document.querySelector(
-    '#cityssm-theme--logout-button'
-  )
+/*
+ * LOGOUT MODAL
+ */
 
-  if (logoutButtonEle) {
-    logoutButtonEle.addEventListener('click', (clickEvent) => {
-      clickEvent.preventDefault()
+document
+  .querySelector('#cityssm-theme--logout-button')
+  ?.addEventListener('click', (clickEvent) => {
+    clickEvent.preventDefault()
 
-      bulmaJS.confirm({
-        contextualColorName: 'warning',
-        title: 'Log Out?',
-        message: 'Are you sure you want to log out?',
-        okButton: {
-          text: 'Log Out',
-          callbackFunction: () => {
-            const urlPrefix =
-              document.querySelector('main').getAttribute('data-url-prefix') ||
-              ''
-            window.localStorage.clear()
-            window.location.href = urlPrefix + '/logout'
-          }
+    bulmaJS.confirm({
+      contextualColorName: 'warning',
+      title: 'Log Out?',
+
+      message: 'Are you sure you want to log out?',
+      okButton: {
+        text: 'Log Out',
+
+        callbackFunction: () => {
+          const urlPrefix =
+            document.querySelector('main')?.dataset.urlPrefix ?? ''
+
+          globalThis.localStorage.clear()
+          globalThis.location.href = `${urlPrefix}/logout`
         }
-      })
+      }
     })
-  }
-})()
+  })
 
 /*
  * SIDE MENU INIT
@@ -42,62 +41,64 @@ declare const cityssm: cityssmGlobal
 ;(() => {
   const localStoragePropertyName = 'collapseSidemenu'
 
-  const collapseButtonEle = document.querySelector(
+  const collapseButtonElement = document.querySelector<HTMLButtonElement>(
     '#cityssm-theme--sidemenu-collapse-button'
-  ) as HTMLButtonElement
-  const collapseSidemenuEle = document.querySelector(
+  )
+
+  const collapseSidemenuElement = document.querySelector(
     '#cityssm-theme--sidemenu-collapsed'
   )
 
-  const expandButtonEle = document.querySelector(
+  const expandButtonElement = document.querySelector<HTMLButtonElement>(
     '#cityssm-theme--sidemenu-expand-button'
-  ) as HTMLButtonElement
-  const expandSidemenuEle = document.querySelector(
+  )
+
+  const expandSidemenuElement = document.querySelector(
     '#cityssm-theme--sidemenu-expanded'
   )
 
-  const collapseFunction = (clickEvent?: Event) => {
-    expandSidemenuEle.classList.add('is-hidden')
-    collapseSidemenuEle.classList.remove('is-hidden')
+  const collapseFunction = (clickEvent?: Event): void => {
+    expandSidemenuElement?.classList.add('is-hidden')
+    collapseSidemenuElement?.classList.remove('is-hidden')
 
     try {
-      window.localStorage.setItem(localStoragePropertyName, 'true')
-    } catch (_error) {
+      globalThis.localStorage.setItem(localStoragePropertyName, 'true')
+    } catch {
       // ignore
     }
 
     if (clickEvent) {
-      expandButtonEle.focus()
+      expandButtonElement?.focus()
     }
   }
 
-  const expandFunction = () => {
-    collapseSidemenuEle.classList.add('is-hidden')
-    expandSidemenuEle.classList.remove('is-hidden')
+  const expandFunction = (): void => {
+    collapseSidemenuElement?.classList.add('is-hidden')
+    expandSidemenuElement?.classList.remove('is-hidden')
 
     try {
-      window.localStorage.removeItem(localStoragePropertyName)
-    } catch (_error) {
+      globalThis.localStorage.removeItem(localStoragePropertyName)
+    } catch {
       // Ignore
     }
 
-    collapseButtonEle.focus()
+    collapseButtonElement?.focus()
   }
 
   if (
-    collapseButtonEle &&
-    collapseSidemenuEle &&
-    expandButtonEle &&
-    expandSidemenuEle
+    collapseButtonElement !== null &&
+    collapseSidemenuElement !== null &&
+    expandButtonElement !== null &&
+    expandSidemenuElement !== null
   ) {
-    collapseButtonEle.addEventListener('click', collapseFunction)
-    expandButtonEle.addEventListener('click', expandFunction)
+    collapseButtonElement.addEventListener('click', collapseFunction)
+    expandButtonElement.addEventListener('click', expandFunction)
 
     try {
-      if (window.localStorage.getItem(localStoragePropertyName)) {
+      if (globalThis.localStorage.getItem(localStoragePropertyName)) {
         collapseFunction()
       }
-    } catch (_error) {
+    } catch {
       // Ignore
     }
   }
@@ -107,24 +108,27 @@ declare const cityssm: cityssmGlobal
  * KEEP ALIVE
  */
 ;(() => {
-  const keepAliveMillis = document
-    .querySelector('main')
-    .getAttribute('data-session-keep-alive-millis')
+  const keepAliveMillis =
+    document.querySelector('main')?.dataset.sessionKeepAliveMillis
 
-  if (keepAliveMillis && keepAliveMillis !== '0') {
-    const urlPrefix =
-      document.querySelector('main').getAttribute('data-url-prefix') || ''
+  if (keepAliveMillis !== undefined && keepAliveMillis !== '0') {
+    const urlPrefix = document.querySelector('main')?.dataset.urlPrefix ?? ''
 
-    const keepAliveFunction = () => {
+    const keepAliveFunction = (): void => {
       cityssm.postJSON(
-        urlPrefix + '/keepAlive',
+        `${urlPrefix}/keepAlive`,
         {
           t: Date.now()
         },
-        () => {}
+        () => {
+          /* empty */
+        }
       )
     }
 
-    window.setInterval(keepAliveFunction, Number.parseInt(keepAliveMillis, 10))
+    globalThis.setInterval(
+      keepAliveFunction,
+      Number.parseInt(keepAliveMillis, 10)
+    )
   }
 })()

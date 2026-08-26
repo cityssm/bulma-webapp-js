@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     let isNavBlockerEnabled = false;
     const navBlockerEventFunction = (event) => {
@@ -7,33 +5,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
         event.returnValue = confirmationMessage;
         return confirmationMessage;
     };
-    const csrfTokenEle = document.querySelector("meta[name='csrf-token']");
-    const csrfToken = csrfTokenEle ? csrfTokenEle.getAttribute('content') : '';
+    const csrfTokenElement = document.querySelector("meta[name='csrf-token']");
+    const csrfToken = csrfTokenElement === null
+        ? ''
+        : (csrfTokenElement.getAttribute('content') ?? '');
     const cityssm = {
-        clearElement: (ele) => {
-            while (ele.firstChild) {
-                ele.firstChild.remove();
-            }
-        },
-        escapeHTML: (str) => {
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-        },
-        dateToString: (dateObject) => {
-            return (dateObject.getFullYear().toString() +
-                '-' +
-                ('0' + (dateObject.getMonth() + 1).toString()).slice(-2) +
-                '-' +
-                ('0' + dateObject.getDate().toString()).slice(-2));
-        },
-        dateToTimeString: (dateObject) => {
-            return (('00' + dateObject.getHours().toString()).slice(-2) +
-                ':' +
-                ('00' + dateObject.getMinutes().toString()).slice(-2));
-        },
+        escapeHTML: (stringValue) => stringValue
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;'),
+        dateToString: (dateObject) => `${dateObject.getFullYear().toString()}-${(dateObject.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}-${dateObject.getDate().toString().padStart(2, '0')}`,
+        dateToTimeString: (dateObject) => `${dateObject.getHours().toString().padStart(2, '0')}:${dateObject
+            .getMinutes()
+            .toString()
+            .padStart(2, '0')}`,
         dateStringToDate: (dateString) => {
             const datePieces = dateString.split('-');
             return new Date(Number.parseInt(datePieces[0], 10), Number.parseInt(datePieces[1], 10) - 1, Number.parseInt(datePieces[2], 10));
@@ -43,10 +31,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             const toDate = cityssm.dateStringToDate(toDateString);
             return Math.round((toDate.getTime() - fromDate.getTime()) / (86_400 * 1000));
         },
-        responseToJSON: async (response) => {
-            return await response.json();
-        },
-        postJSON: (fetchUrl, formEleOrObj, responseFunction) => {
+        responseToJSON: async (response) => (await response.json()),
+        postJSON: (fetchUrl, formElementOrObject, responseFunction) => {
             const fetchOptions = {
                 credentials: 'same-origin',
                 headers: {
@@ -54,94 +40,87 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 },
                 method: 'POST'
             };
-            if (formEleOrObj) {
-                if (formEleOrObj instanceof HTMLFormElement) {
-                    const formEle = formEleOrObj;
-                    if (formEle.querySelector("input[name][type='file']")) {
-                        fetchOptions.body = new FormData(formEle);
+            if (formElementOrObject instanceof HTMLFormElement) {
+                const formElement = formElementOrObject;
+                if (formElement.querySelector("input[name][type='file']") === null) {
+                    const formData = new FormData(formElement);
+                    const object = {};
+                    for (const [key, value] of formData.entries()) {
+                        if (!Reflect.has(object, key)) {
+                            object[key] = value;
+                            continue;
+                        }
+                        if (!Array.isArray(object[key])) {
+                            object[key] = [object[key]];
+                        }
+                        object[key].push(value);
                     }
-                    else {
-                        const formData = new FormData(formEle);
-                        const object = {};
-                        formData.forEach((value, key) => {
-                            if (!Reflect.has(object, key)) {
-                                object[key] = value;
-                                return;
-                            }
-                            if (!Array.isArray(object[key])) {
-                                object[key] = [object[key]];
-                            }
-                            object[key].push(value);
-                        });
-                        const json = JSON.stringify(object);
-                        fetchOptions.headers['Content-Type'] = 'application/json';
-                        fetchOptions.body = json;
-                    }
-                }
-                else if (formEleOrObj instanceof Object) {
+                    const json = JSON.stringify(object);
                     fetchOptions.headers['Content-Type'] = 'application/json';
-                    fetchOptions.body = JSON.stringify(formEleOrObj);
+                    fetchOptions.body = json;
+                }
+                else {
+                    fetchOptions.body = new FormData(formElement);
                 }
             }
-            window
+            else if (formElementOrObject instanceof Object) {
+                fetchOptions.headers['Content-Type'] = 'application/json';
+                fetchOptions.body = JSON.stringify(formElementOrObject);
+            }
+            globalThis
                 .fetch(fetchUrl, fetchOptions)
-                .then(cityssm.responseToJSON)
+                .then(async (response) => await cityssm.responseToJSON(response))
                 .then(responseFunction)
                 .catch((error) => {
                 console.error(error);
             });
         },
-        showModal: (modalEle) => {
-            modalEle.classList.add('is-active');
+        showModal: (modalElement) => {
+            modalElement.classList.add('is-active');
         },
-        hideModal: (internalEle_or_internalEvent) => {
-            let internalEle = internalEle_or_internalEvent;
-            if (internalEle instanceof Event) {
-                internalEle = internalEle_or_internalEvent
+        hideModal: (internalElementOrEvent) => {
+            let internalElement = internalElementOrEvent;
+            if (internalElement instanceof Event) {
+                internalElement = internalElementOrEvent
                     .currentTarget;
             }
-            const modalEle = internalEle.classList.contains('modal')
-                ? internalEle
-                : internalEle.closest('.modal');
-            modalEle.classList.remove('is-active');
+            const modalElement = internalElement.classList.contains('modal')
+                ? internalElement
+                : internalElement.closest('.modal');
+            modalElement?.classList.remove('is-active');
         },
         htmlModalFolder: '/html/',
-        openHtmlModal: (htmlFileName, callbackFns) => {
-            window
-                .fetch(cityssm.htmlModalFolder + htmlFileName + '.html')
+        openHtmlModal: (htmlFileName, callbackFunctions) => {
+            globalThis
+                .fetch(`${cityssm.htmlModalFolder + htmlFileName}.html`)
                 .then(async (response) => await response.text())
-                .then(async (modalHTML) => {
-                const modalContainerEle = document.createElement('div');
-                modalContainerEle.innerHTML = modalHTML;
-                const modalEle = modalContainerEle.querySelector('.modal');
-                document.body.insertAdjacentElement('beforeend', modalContainerEle);
-                if (callbackFns?.onshow) {
-                    callbackFns.onshow(modalEle);
+                .then((modalHTML) => {
+                const modalContainerElement = document.createElement('div');
+                modalContainerElement.innerHTML = modalHTML;
+                const modalElement = modalContainerElement.querySelector('.modal');
+                if (modalElement === null) {
+                    throw new Error(`No modal element found in HTML file: ${htmlFileName}`);
                 }
-                modalEle.classList.add('is-active');
+                document.body.insertAdjacentElement('beforeend', modalContainerElement);
+                callbackFunctions.onshow?.(modalElement);
+                modalElement.classList.add('is-active');
                 const closeModalFunction = () => {
-                    const modalWasShown = modalEle.classList.contains('is-active');
-                    if (callbackFns?.onhide && modalWasShown) {
-                        const doHide = callbackFns.onhide(modalEle);
+                    const modalWasShown = modalElement.classList.contains('is-active');
+                    if (callbackFunctions.onhide !== undefined && modalWasShown) {
+                        const doHide = callbackFunctions.onhide(modalElement);
                         if (doHide) {
                             return;
                         }
                     }
-                    modalEle.classList.remove('is-active');
-                    if (callbackFns?.onhidden && modalWasShown) {
-                        callbackFns.onhidden(modalEle);
-                    }
-                    modalContainerEle.remove();
-                    if (callbackFns?.onremoved) {
-                        callbackFns.onremoved();
-                    }
+                    modalElement.classList.remove('is-active');
+                    callbackFunctions.onhidden?.(modalElement);
+                    modalContainerElement.remove();
+                    callbackFunctions.onremoved?.();
                 };
-                if (callbackFns?.onshown) {
-                    callbackFns.onshown(modalEle, closeModalFunction);
-                }
-                const closeModalButtonEles = modalEle.querySelectorAll('.is-close-modal-button');
-                for (const closeModalButtonEle of closeModalButtonEles) {
-                    closeModalButtonEle.addEventListener('click', closeModalFunction);
+                callbackFunctions.onshown?.(modalElement, closeModalFunction);
+                const closeModalButtonElements = modalElement.querySelectorAll('.is-close-modal-button');
+                for (const closeModalButtonElement of closeModalButtonElements) {
+                    closeModalButtonElement.addEventListener('click', closeModalFunction);
                 }
             })
                 .catch((error) => {
@@ -160,9 +139,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 isNavBlockerEnabled = false;
             }
         },
-        isNavBlockerEnabled: () => {
-            return isNavBlockerEnabled;
-        }
+        isNavBlockerEnabled: () => isNavBlockerEnabled
     };
-    window.cityssm = window.cityssm || cityssm;
+    globalThis.cityssm = globalThis.cityssm ?? cityssm;
 })();

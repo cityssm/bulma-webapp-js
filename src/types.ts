@@ -1,39 +1,49 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
+export interface CityssmGlobal {
+  escapeHTML: (unescapedString: string) => string
 
-type BulmaContextualColors = "dark" | "primary" | "link" | "info" | "success" | "warning" | "danger";
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+  postJSON: <T>(
+    fetchUrl: string,
+    formElementOrObject: HTMLFormElement | Record<string, unknown>,
+    responseFunction: (responseJSON: T) => void
+  ) => void
 
-type ParsedJSON = Record<string, unknown> | boolean | number | string;
+  responseToJSON: <T>(response: Response) => Promise<T>
 
+  hideModal: (internalElementOrEvent: Event | HTMLElement) => void
+  showModal: (modalElement: HTMLElement) => void
 
-export interface cityssmGlobal {
+  htmlModalFolder: string
 
-  clearElement: (element: HTMLElement) => void;
-  escapeHTML: (unescapedString: string) => string;
+  openHtmlModal: (
+    htmlFileName: string,
+    callbackFunctions: {
+      onshow?: (modalElement: HTMLElement) => void
 
-  postJSON:
-  (fetchUrl: string, formEleOrObject: unknown | HTMLFormElement, responseFunction: (responseJSON: ParsedJSON) => void) => void;
+      onshown?: (
+        modalElement: HTMLElement,
+        closeModalFunction: () => void
+      ) => void
 
-  responseToJSON: (response: Response) => Promise<ParsedJSON>;
+      onhide?: (modalElement: HTMLElement) => boolean
 
-  showModal: (modalEle: HTMLElement) => void;
-  hideModal: (internalElementOrEvent: HTMLElement | Event) => void;
+      onhidden?: (modalElement: HTMLElement) => void
 
-  htmlModalFolder: string;
+      onremoved?: () => void
+    }
+  ) => void
 
-  openHtmlModal: (htmlFileName: string, callbackFns: {
-    onshow?: (modalEle: HTMLElement) => void;
-    onshown?: (modalEle: HTMLElement, closeModalFunction: () => void) => void;
-    onhide?: (modalEle: HTMLElement) => boolean;
-    onhidden?: (modalEle: HTMLElement) => void;
-    onremoved?: () => void;
-  }) => void;
+  dateToString: (dateObject: Date) => string
+  dateToTimeString: (dateObject: Date) => string
 
-  dateToString: (dateObject: Date) => string;
-  dateToTimeString: (dateObject: Date) => string;
-  dateStringToDate: (dateString: string) => Date;
-  dateStringDifferenceInDays: (toDateString: string, fromDateString: string) => number;
+  dateStringToDate: (dateString: string) => Date
 
-  enableNavBlocker: () => void;
-  disableNavBlocker: () => void;
-  isNavBlockerEnabled: () => boolean;
+  dateStringDifferenceInDays: (
+    toDateString: string,
+    fromDateString: string
+  ) => number
+
+  disableNavBlocker: () => void
+  enableNavBlocker: () => void
+  isNavBlockerEnabled: () => boolean
 }

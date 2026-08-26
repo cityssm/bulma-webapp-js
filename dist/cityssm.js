@@ -1,5 +1,3 @@
-"use strict";
-
 (() => {
     let isNavBlockerEnabled = false;
     const navBlockerEventFunction = (event) => {
@@ -8,7 +6,9 @@
         return confirmationMessage;
     };
     const csrfTokenEle = document.querySelector("meta[name='csrf-token']");
-    const csrfToken = csrfTokenEle ? csrfTokenEle.getAttribute('content') : '';
+    const csrfToken = csrfTokenEle
+        ? (csrfTokenEle.getAttribute('content') ?? '')
+        : '';
     const cityssm = {
         clearElement: (ele) => {
             while (ele.firstChild) {
@@ -85,7 +85,7 @@
             }
             window
                 .fetch(fetchUrl, fetchOptions)
-                .then(cityssm.responseToJSON)
+                .then(async (response) => await cityssm.responseToJSON(response))
                 .then(responseFunction)
                 .catch((error) => {
                 console.error(error);
@@ -103,7 +103,7 @@
             const modalEle = internalEle.classList.contains('modal')
                 ? internalEle
                 : internalEle.closest('.modal');
-            modalEle.classList.remove('is-active');
+            modalEle?.classList.remove('is-active');
         },
         htmlModalFolder: '/html/',
         openHtmlModal: (htmlFileName, callbackFns) => {
@@ -113,23 +113,26 @@
                 .then(async (modalHTML) => {
                 const modalContainerEle = document.createElement('div');
                 modalContainerEle.innerHTML = modalHTML;
-                const modalEle = modalContainerEle.querySelector('.modal');
+                const modalElement = modalContainerEle.querySelector('.modal');
+                if (!modalElement) {
+                    throw new Error('No modal element found in HTML file: ' + htmlFileName);
+                }
                 document.body.insertAdjacentElement('beforeend', modalContainerEle);
                 if (callbackFns?.onshow) {
-                    callbackFns.onshow(modalEle);
+                    callbackFns.onshow(modalElement);
                 }
-                modalEle.classList.add('is-active');
+                modalElement.classList.add('is-active');
                 const closeModalFunction = () => {
-                    const modalWasShown = modalEle.classList.contains('is-active');
+                    const modalWasShown = modalElement.classList.contains('is-active');
                     if (callbackFns?.onhide && modalWasShown) {
-                        const doHide = callbackFns.onhide(modalEle);
+                        const doHide = callbackFns.onhide(modalElement);
                         if (doHide) {
                             return;
                         }
                     }
-                    modalEle.classList.remove('is-active');
+                    modalElement.classList.remove('is-active');
                     if (callbackFns?.onhidden && modalWasShown) {
-                        callbackFns.onhidden(modalEle);
+                        callbackFns.onhidden(modalElement);
                     }
                     modalContainerEle.remove();
                     if (callbackFns?.onremoved) {
@@ -137,10 +140,10 @@
                     }
                 };
                 if (callbackFns?.onshown) {
-                    callbackFns.onshown(modalEle, closeModalFunction);
+                    callbackFns.onshown(modalElement, closeModalFunction);
                 }
-                const closeModalButtonEles = modalEle.querySelectorAll('.is-close-modal-button');
-                for (const closeModalButtonEle of closeModalButtonEles) {
+                const closeModalButtonElements = modalElement.querySelectorAll('.is-close-modal-button');
+                for (const closeModalButtonEle of closeModalButtonElements) {
                     closeModalButtonEle.addEventListener('click', closeModalFunction);
                 }
             })

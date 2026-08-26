@@ -1,55 +1,50 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
-import type { cityssmGlobal } from './types.js'
 
+import type { CityssmGlobal } from './types.js'
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare const bulmaJS: BulmaJS
 ;(() => {
   // NAV BLOCKER
 
   let isNavBlockerEnabled = false
 
-  const navBlockerEventFunction = (event: BeforeUnloadEvent) => {
+  const navBlockerEventFunction = (event: BeforeUnloadEvent): string => {
     const confirmationMessage = 'You have unsaved changes that may be lost.'
+
+    // eslint-disable-next-line sonarjs/deprecation, @typescript-eslint/no-deprecated
     event.returnValue = confirmationMessage
+
     return confirmationMessage
   }
 
-  const csrfTokenEle = document.querySelector("meta[name='csrf-token']")
-  const csrfToken = csrfTokenEle ? csrfTokenEle.getAttribute('content') : ''
+  const csrfTokenElement = document.querySelector("meta[name='csrf-token']")
 
-  const cityssm: cityssmGlobal = {
+  const csrfToken =
+    csrfTokenElement === null
+      ? ''
+      : (csrfTokenElement.getAttribute('content') ?? '')
+
+  const cityssm: CityssmGlobal = {
     // HELPERS
 
-    clearElement: (ele) => {
-      while (ele.firstChild) {
-        ele.firstChild.remove()
-      }
-    },
+    escapeHTML: (stringValue) =>
+      stringValue
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;'),
 
-    escapeHTML: (str) => {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-    },
+    dateToString: (dateObject) =>
+      `${dateObject.getFullYear().toString()}-${(dateObject.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${dateObject.getDate().toString().padStart(2, '0')}`,
 
-    dateToString: (dateObject) => {
-      return (
-        dateObject.getFullYear().toString() +
-        '-' +
-        ('0' + (dateObject.getMonth() + 1).toString()).slice(-2) +
-        '-' +
-        ('0' + dateObject.getDate().toString()).slice(-2)
-      )
-    },
-
-    dateToTimeString: (dateObject) => {
-      return (
-        ('00' + dateObject.getHours().toString()).slice(-2) +
-        ':' +
-        ('00' + dateObject.getMinutes().toString()).slice(-2)
-      )
-    },
+    dateToTimeString: (dateObject) =>
+      `${dateObject.getHours().toString().padStart(2, '0')}:${dateObject
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`,
 
     dateStringToDate: (dateString) => {
       const datePieces = dateString.split('-')
@@ -72,12 +67,19 @@ declare const bulmaJS: BulmaJS
 
     // FETCH HELPERS
 
-    responseToJSON: async (response) => {
-      return await response.json()
-    },
+    responseToJSON: async <T>(
+      response: Response
+    ): Promise<T> => (await response.json()) as unknown as T,
 
-    postJSON: (fetchUrl, formEleOrObj, responseFunction) => {
-      const fetchOptions: RequestInit = {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+    postJSON: <T>(
+      fetchUrl: string,
+      formElementOrObject: HTMLFormElement | Record<string, unknown>,
+      responseFunction: (responseJSON: T) => void
+    ) => {
+      const fetchOptions: RequestInit & {
+        headers: Record<string, string>
+      } = {
         credentials: 'same-origin',
         headers: {
           'x-csrf-token': csrfToken
@@ -85,74 +87,74 @@ declare const bulmaJS: BulmaJS
         method: 'POST'
       }
 
-      if (formEleOrObj) {
-        if (formEleOrObj instanceof HTMLFormElement) {
-          const formEle = formEleOrObj
+      if (formElementOrObject instanceof HTMLFormElement) {
+        const formElement = formElementOrObject
 
-          if (formEle.querySelector("input[name][type='file']")) {
-            fetchOptions.body = new FormData(formEle)
-          } else {
-            const formData = new FormData(formEle)
+        if (formElement.querySelector("input[name][type='file']") === null) {
+          const formData = new FormData(formElement)
 
-            const object = {}
+          const object = {}
 
-            formData.forEach((value, key) => {
-              // Reflect.has in favor of: object.hasOwnProperty(key)
-              if (!Reflect.has(object, key)) {
-                object[key] = value
-                return
-              }
-              if (!Array.isArray(object[key])) {
-                object[key] = [object[key]]
-              }
-              object[key].push(value)
-            })
+          for (const [key, value] of formData.entries()) {
+            // Reflect.has in favor of: object.hasOwnProperty(key)
+            if (!Reflect.has(object, key)) {
+              object[key] = value
+              continue
+            }
 
-            const json = JSON.stringify(object)
+            if (!Array.isArray(object[key])) {
+              object[key] = [object[key]]
+            }
 
-            fetchOptions.headers['Content-Type'] = 'application/json'
-            fetchOptions.body = json
+            object[key].push(value)
           }
-        } else if (formEleOrObj instanceof Object) {
+
+          const json = JSON.stringify(object)
+
           fetchOptions.headers['Content-Type'] = 'application/json'
-          fetchOptions.body = JSON.stringify(formEleOrObj)
+          fetchOptions.body = json
+        } else {
+          fetchOptions.body = new FormData(formElement)
         }
+      } else if (formElementOrObject instanceof Object) {
+        fetchOptions.headers['Content-Type'] = 'application/json'
+        fetchOptions.body = JSON.stringify(formElementOrObject)
       }
 
-      window
+      globalThis
         .fetch(fetchUrl, fetchOptions)
-        .then(cityssm.responseToJSON)
+        .then(async (response) => await cityssm.responseToJSON<T>(response))
         .then(responseFunction)
-        .catch((error) => {
+        .catch((error: unknown) => {
+          // eslint-disable-next-line no-console
           console.error(error)
         })
     },
 
     // MODAL TOGGLES
 
-    showModal: (modalEle) => {
-      modalEle.classList.add('is-active')
+    showModal: (modalElement) => {
+      modalElement.classList.add('is-active')
     },
 
-    hideModal: (internalEle_or_internalEvent) => {
-      let internalEle = internalEle_or_internalEvent
+    hideModal: (internalElementOrEvent) => {
+      let internalElement = internalElementOrEvent
 
-      if (internalEle instanceof Event) {
-        internalEle = (internalEle_or_internalEvent as Event)
+      if (internalElement instanceof Event) {
+        internalElement = (internalElementOrEvent as Event)
           .currentTarget as HTMLElement
       }
 
-      const modalEle = internalEle.classList.contains('modal')
-        ? internalEle
-        : internalEle.closest('.modal')
+      const modalElement = internalElement.classList.contains('modal')
+        ? internalElement
+        : internalElement.closest('.modal')
 
-      modalEle.classList.remove('is-active')
+      modalElement?.classList.remove('is-active')
     },
 
     htmlModalFolder: '/html/',
 
-    openHtmlModal: (htmlFileName, callbackFns) => {
-      // eslint-disable-next-line capitalized-comments
+    openHtmlModal: (htmlFileName, callbackFunctions) => {
       /*
        * callbackFns
        *
@@ -168,71 +170,78 @@ declare const bulmaJS: BulmaJS
        *     no longer part of the DOM
        */
 
-      window
-        .fetch(cityssm.htmlModalFolder + htmlFileName + '.html')
+      globalThis
+        .fetch(`${cityssm.htmlModalFolder + htmlFileName}.html`)
         .then(async (response) => await response.text())
-        .then(async (modalHTML) => {
+        .then((modalHTML) => {
           // Append the modal to the end of the body
 
-          const modalContainerEle = document.createElement('div')
-          modalContainerEle.innerHTML = modalHTML
+          const modalContainerElement = document.createElement('div')
 
-          const modalEle: HTMLElement =
-            modalContainerEle.querySelector('.modal')
+          // eslint-disable-next-line browser-security/no-innerhtml
+          modalContainerElement.innerHTML = modalHTML
 
-          document.body.insertAdjacentElement('beforeend', modalContainerEle)
+          const modalElement =
+            modalContainerElement.querySelector<HTMLElement>('.modal')
+
+          if (modalElement === null) {
+            throw new Error(
+              `No modal element found in HTML file: ${htmlFileName}`
+            )
+          }
+
+          document.body.insertAdjacentElement(
+            'beforeend',
+            modalContainerElement
+          )
 
           // Call onshow()
 
-          if (callbackFns?.onshow) {
-            callbackFns.onshow(modalEle)
-          }
+          callbackFunctions.onshow?.(modalElement)
 
           // Show the modal
 
-          modalEle.classList.add('is-active')
+          modalElement.classList.add('is-active')
 
-          const closeModalFunction = () => {
-            const modalWasShown = modalEle.classList.contains('is-active')
+          const closeModalFunction = (): void => {
+            const modalWasShown = modalElement.classList.contains('is-active')
 
-            if (callbackFns?.onhide && modalWasShown) {
-              const doHide = callbackFns.onhide(modalEle)
+            if (callbackFunctions.onhide !== undefined && modalWasShown) {
+              const doHide = callbackFunctions.onhide(modalElement)
 
               if (doHide) {
                 return
               }
             }
 
-            modalEle.classList.remove('is-active')
+            modalElement.classList.remove('is-active')
 
-            if (callbackFns?.onhidden && modalWasShown) {
-              callbackFns.onhidden(modalEle)
-            }
+            callbackFunctions.onhidden?.(modalElement)
 
-            modalContainerEle.remove()
+            modalContainerElement.remove()
 
-            if (callbackFns?.onremoved) {
-              callbackFns.onremoved()
-            }
+            callbackFunctions.onremoved?.()
           }
 
           // Call onshown()
 
-          if (callbackFns?.onshown) {
-            callbackFns.onshown(modalEle, closeModalFunction)
-          }
+          callbackFunctions.onshown?.(modalElement, closeModalFunction)
 
           // Set up close buttons
 
-          const closeModalButtonEles = modalEle.querySelectorAll(
+          const closeModalButtonElements = modalElement.querySelectorAll(
             '.is-close-modal-button'
           ) as NodeListOf<HTMLButtonElement>
 
-          for (const closeModalButtonEle of closeModalButtonEles) {
-            closeModalButtonEle.addEventListener('click', closeModalFunction)
+          for (const closeModalButtonElement of closeModalButtonElements) {
+            closeModalButtonElement.addEventListener(
+              'click',
+              closeModalFunction
+            )
           }
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
+          // eslint-disable-next-line no-console
           console.error(error)
         })
     },
@@ -253,10 +262,9 @@ declare const bulmaJS: BulmaJS
       }
     },
 
-    isNavBlockerEnabled: () => {
-      return isNavBlockerEnabled
-    }
+    isNavBlockerEnabled: () => isNavBlockerEnabled
   }
 
-  ;(window as any).cityssm = (window as any).cityssm || cityssm
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ;(globalThis as any).cityssm = (globalThis as any).cityssm ?? cityssm
 })()

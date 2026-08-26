@@ -1,81 +1,74 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-(() => {
-    const logoutButtonEle = document.querySelector('#cityssm-theme--logout-button');
-    if (logoutButtonEle) {
-        logoutButtonEle.addEventListener('click', (clickEvent) => {
-            clickEvent.preventDefault();
-            bulmaJS.confirm({
-                contextualColorName: 'warning',
-                title: 'Log Out?',
-                message: 'Are you sure you want to log out?',
-                okButton: {
-                    text: 'Log Out',
-                    callbackFunction: () => {
-                        const urlPrefix = document.querySelector('main').getAttribute('data-url-prefix') ||
-                            '';
-                        window.localStorage.clear();
-                        window.location.href = urlPrefix + '/logout';
-                    }
-                }
-            });
-        });
-    }
-})();
+document
+    .querySelector('#cityssm-theme--logout-button')
+    ?.addEventListener('click', (clickEvent) => {
+    clickEvent.preventDefault();
+    bulmaJS.confirm({
+        contextualColorName: 'warning',
+        title: 'Log Out?',
+        message: 'Are you sure you want to log out?',
+        okButton: {
+            text: 'Log Out',
+            callbackFunction: () => {
+                const urlPrefix = document.querySelector('main')?.dataset.urlPrefix ?? '';
+                globalThis.localStorage.clear();
+                globalThis.location.href = `${urlPrefix}/logout`;
+            }
+        }
+    });
+});
 (() => {
     const localStoragePropertyName = 'collapseSidemenu';
-    const collapseButtonEle = document.querySelector('#cityssm-theme--sidemenu-collapse-button');
-    const collapseSidemenuEle = document.querySelector('#cityssm-theme--sidemenu-collapsed');
-    const expandButtonEle = document.querySelector('#cityssm-theme--sidemenu-expand-button');
-    const expandSidemenuEle = document.querySelector('#cityssm-theme--sidemenu-expanded');
+    const collapseButtonElement = document.querySelector('#cityssm-theme--sidemenu-collapse-button');
+    const collapseSidemenuElement = document.querySelector('#cityssm-theme--sidemenu-collapsed');
+    const expandButtonElement = document.querySelector('#cityssm-theme--sidemenu-expand-button');
+    const expandSidemenuElement = document.querySelector('#cityssm-theme--sidemenu-expanded');
     const collapseFunction = (clickEvent) => {
-        expandSidemenuEle.classList.add('is-hidden');
-        collapseSidemenuEle.classList.remove('is-hidden');
+        expandSidemenuElement?.classList.add('is-hidden');
+        collapseSidemenuElement?.classList.remove('is-hidden');
         try {
-            window.localStorage.setItem(localStoragePropertyName, 'true');
+            globalThis.localStorage.setItem(localStoragePropertyName, 'true');
         }
-        catch (_error) {
+        catch {
         }
         if (clickEvent) {
-            expandButtonEle.focus();
+            expandButtonElement?.focus();
         }
     };
     const expandFunction = () => {
-        collapseSidemenuEle.classList.add('is-hidden');
-        expandSidemenuEle.classList.remove('is-hidden');
+        collapseSidemenuElement?.classList.add('is-hidden');
+        expandSidemenuElement?.classList.remove('is-hidden');
         try {
-            window.localStorage.removeItem(localStoragePropertyName);
+            globalThis.localStorage.removeItem(localStoragePropertyName);
         }
-        catch (_error) {
+        catch {
         }
-        collapseButtonEle.focus();
+        collapseButtonElement?.focus();
     };
-    if (collapseButtonEle &&
-        collapseSidemenuEle &&
-        expandButtonEle &&
-        expandSidemenuEle) {
-        collapseButtonEle.addEventListener('click', collapseFunction);
-        expandButtonEle.addEventListener('click', expandFunction);
+    if (collapseButtonElement !== null &&
+        collapseSidemenuElement !== null &&
+        expandButtonElement !== null &&
+        expandSidemenuElement !== null) {
+        collapseButtonElement.addEventListener('click', collapseFunction);
+        expandButtonElement.addEventListener('click', expandFunction);
         try {
-            if (window.localStorage.getItem(localStoragePropertyName)) {
+            if (globalThis.localStorage.getItem(localStoragePropertyName)) {
                 collapseFunction();
             }
         }
-        catch (_error) {
+        catch {
         }
     }
 })();
 (() => {
-    const keepAliveMillis = document
-        .querySelector('main')
-        .getAttribute('data-session-keep-alive-millis');
-    if (keepAliveMillis && keepAliveMillis !== '0') {
-        const urlPrefix = document.querySelector('main').getAttribute('data-url-prefix') || '';
+    const keepAliveMillis = document.querySelector('main')?.dataset.sessionKeepAliveMillis;
+    if (keepAliveMillis !== undefined && keepAliveMillis !== '0') {
+        const urlPrefix = document.querySelector('main')?.dataset.urlPrefix ?? '';
         const keepAliveFunction = () => {
-            cityssm.postJSON(urlPrefix + '/keepAlive', {
+            cityssm.postJSON(`${urlPrefix}/keepAlive`, {
                 t: Date.now()
-            }, () => { });
+            }, () => {
+            });
         };
-        window.setInterval(keepAliveFunction, Number.parseInt(keepAliveMillis, 10));
+        globalThis.setInterval(keepAliveFunction, Number.parseInt(keepAliveMillis, 10));
     }
 })();

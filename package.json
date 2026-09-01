@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/gulp": "^4.0.18",
-    "eslint-config-cityssm": "^48.1.0",
+    "eslint-config-cityssm": "^50.0.0",
     "gulp": "^5.0.1",
     "gulp-replace": "^1.1.4",
     "prettier-config-cityssm": "^2.1.3"
